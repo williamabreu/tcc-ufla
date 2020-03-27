@@ -1,0 +1,16 @@
+#!/bin/bash
+# Apaga todos os arquivos objetos de compilação do LaTeX
+# (útil quando para quando travar...)
+rm                  \
+src/*.aux           \
+src/*.bbl           \
+src/*.blg           \
+src/*.fdb_latexmk   \
+src/*.fls           \
+src/*.lff           \
+src/*.log           \
+src/*.loq           \
+src/*.ltt           \
+src/*.out           \
+src/*.toc           \
+src/*.gz            \
