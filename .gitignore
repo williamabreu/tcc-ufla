@@ -288,3 +288,6 @@ main.pdf
 *.loq
 *.lgg
 *.loi
+
+# IDE
+.vscode/
