@@ -4,7 +4,7 @@ Trabalho de Conclusão do Curso de Bacharelado em Ciência da Computação
 
 > Esboço inicial do documento
 
-1. Introdção
+1. Introdução
 
     1.1. Contextualização do assunto
         
