@@ -20,9 +20,16 @@
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\usepackage{multirow}            % para juntar duas linhas em uma só
 
+\usepackage{multirow}            % para juntar duas linhas em uma só
 \usepackage{multicol}            % para uso de várias colunas
+
+\usepackage{tikz}                % tikz
+\usetikzlibrary{trees}
+\usetikzlibrary{arrows}
+\tikzset{
+  every node/.style = {circle, black, draw=black},
+}
 
 % cores para os links cruzados
 \usepackage{color}
@@ -92,7 +99,7 @@
 
 % Especificando hifenizações que por ventura LaTeX não saiba fazer
 % Por padrão 99,9% dos termos em português devem ser hifenizados corretamente.
-\hyphenation{hardware software Li-nux am-bien-te diag-nos-ti-car coor-de-na-ção FAE-PE Recovery TelEduc Williams UFLA}
+\hyphenation{hardware software Li-nux RouterOS}
 
 % ==============================================================================
 % Dados da monografia, capa: autor, titulo, banca, etc... - SUBSTITUA DE ACORDO
