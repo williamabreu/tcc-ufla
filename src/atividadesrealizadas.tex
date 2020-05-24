@@ -1,0 +1,114 @@
+\chapter{Descrição das Atividades Realizadas}
+
+    Descrever a plenitude das atividades executadas no estágio seria extremamente extenso, pois o estágio na área de TI demanda a execução de inúmeras tarefas corriqueiras. Por isso, aqui serão descritas as principais atividades desenvolvidas no período do estágio em administração de serviços de redes, sendo elas a fundamentação das técnicas adquiridas através de capacitações e de treinamentos na empresa, o processo de endereçamento IP e implementação de CGNAT para provisionamento de acesso à internet, o deploy de um serviço de VPN e o desenvolvimento de regras de bloqueio por firewall. 
+
+\section{Capacitações e treinamentos}
+
+    Conforme definição de dicionário, treinar consiste em praticar regularmente qualquer atividade e capacitar é tornar-se apto à atividade \cite{michaelis2015}. Ou seja, primeiro vem a capacitação e por conseguinte o treinamento. Portanto, a capacitação é a primeira tarefa do estagiário dentro da organização, para nivelamento de conhecimento, e o treinamento é uma constante durante todo período de estágio supervisionado, pois o estudante estará aplicando, aprendendo e desenvolvendo habilidades práticas no ambiente da organização em todo o decorrer, sob supervisão e suporte de um profissional. A capacitação e o treinamento oferecido ao estagiário é um dos principais objetivos da atividade de estágio em si.
+    
+    Na Minasnet, após a admissão de qualquer colaborador, seja tanto trabalhador formal quanto estagiário, é aplicada capacitações e feito treinamentos para integrar o novato nos processos da empresa, de acordo com a função que este for assumir. Para o estagiário, nas primeiras semanas de trabalho um dos integrantes do NOC fornece uma capacitação individual expositiva, apresentando conceitos básicos de redes e da topologia do backbone da empresa, como também de procedimentos de atendimento e de suporte a clientes finais, para entender quem são os clientes da empresa. São fornecidos manuais dos equipamentos que são usados e o novato é encaminhado para um treinamento para praticar os procedimentos aprendidos. O primeiro treinamento foi montar um pequeno provedor de laboratório utilizando equipamentos Mikrotik, simulando o roteamento estático e dinâmico com OSPF em algumas RB750 e enlaces de rádio com Groove, tudo realizado no primeiro dia do estágio, para se familiarizar desde então com o RouterOS.
+    
+    Mais adiante, foi solicitado a matrícula e exigida a apresentação de conclusão do minicurso ofertado pela Fundação Bradesco na modalidade EaD denominado ``Fundamentos de ITIL'', no qual apresentou os conceitos básicos sobre o framework ITIL para planejamento estratégico em infraestrutura de TI, com carga horária total de 16h. O último treinamento oferecido foi o minicurso presencial e com duração de 18h denominado ``Protocolo de Roteamento OSPF e Mikrotik de Iniciante a Intermediário'', restrito aos técnicos internos da Minasnet, para treinamento de roteamento dinâmico com OSPF no Mikrotik, utilizando o simulador GNS3 bem como dispositivos reais fornecidos.
+    
+    Demais conhecimentos adquiridos foram obtidos com capacitação individual, em que um colega da equipe ensinava determinado procedimento e depois acompanhava a atuação, como também através de cursos e de materiais digitais compartilhados pela equipe ou pela própria iniciativa de buscar conteúdo em fóruns e em plataformas vídeo.
+    
+\section{Endereçamento IP e implementação de CGNAT}
+
+    O IP é a identificação que permite que os dados trafeguem desde a origem até o destino dentro da rede mundial de computadores, por isso é necessário fornecer endereços IP para todos os dispositivos que se conectarão à internet. Em um provedor, a rede (que é um conjunto de endereços IP) é dimensionada de acordo com a quantidade de clientes que serão atendidos dentro de uma determinada área de abrangência, que geralmente é atomizada por cidades.
+    
+    Na Minasnet, a rede é subdividida em áreas OSPF, sendo que cada área associa uma cidade. Zonas rurais e vilarejos recebem o mesmo código de área da cidade a qual pertencem. Assim, a sub-rede é dimensionada de acordo com o tamanho da cidade e com a quantidade de clientes associados àquela área, sendo geralmente um /24 o menor prefixo atribuído a uma área e um /22 o maior. Por exemplo, a franquia de Perdões tem uma rede /22, isso significa que existem 1024 endereços públicos dedicados a atenderem os clientes dessa cidade.
+    
+   Os IPs são associados aos CPEs \footnote{CPE é o dispositivo gateway da rede interna de um cliente.} através de um túnel PPPoE fechado com o concentrador. Como o próprio nome sugere, o concentrador centraliza todas as conexões de camada 3 dos clientes conectados em um único equipamento. Entretanto, dependendo do hardware e da configuração do software de um equipamento concentrador, pode ser necessário a utilização de mais de um equipamento para dividir a carga do servidor PPPoE. 
+   Um exemplo disso na Minasnet foi a franquia de Oliveira, uma das mais recentemente atendidas pelo ISP. A princípio existia um único concentrador PPPoE, que devido à demanda de clientes entrantes, teve sua carga dividida com uma segundo concentrador instalado junto a ele. O padrão da empresa é manter no máximo 1024 clientes em um concentrador.
+   
+   Para documentar a rede IP do AS \footnote{AS é o conjunto de todas as sub-redes públicas de um ISP, a Minasnet é o AS262488 e tem 8.192 IPs alocados pelo Lacnic.}, é utilizado o software PHPIPAM. Nele é possível criar o aninhamento entre sub-redes e deixar descrito qual a finalidade de cada uma delas, facilitando consultas e manipulações nas redes. Tomando o exemplo de Perdões, no PHPIPAM exite uma rede com mesmo nome da cidade, na qual estão documentados todos os IPs públicos da rede /22 dimensionada para ela como também os IPs privados utilizados, que são as redes 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 definidas pela RFC1918 \cite{rfc1918} e o espaço compartilhado 100.64.0.0/10 pela RFC6598 \cite{rfc6598}.
+   
+   Dado que a franquia de Perdões possui muito mais do que 1024 clientes, um pool \footnote{Diferente de uma rede, que tem reservado o primeiro e o último endereço para o host e para o broadcast respectivamente, no pool todos os endereços são alocados, inclusive 0 e 255.} de prefixo /22 não atenderia à demanda. A solução para isso é a utilização do artifício do NAT, disponibilizando IPs privados aos clientes e fazendo associação do par IP-porta com o IP público alvo do NAT. Redes privadas não devem ser anunciadas na internet pública e a única forma de comunicarem-se com o mundo é através do NAT. 
+   
+   O NAT funciona porque o que estabelece comunicação entre dois hosts é a camada de transporte, isto é, uma porta definida pelos respectivos sistemas operacionais dos hosts garante a conexão fim-a-fim na internet. Assim, a função do IP é rotear os pacotes e do TCP estabelecer a conexão HTTP, por exemplo. Um cliente com IP público dedicado tem a sua disposição 65535 portas, o que lhe daria a possibilidade de estabelecer, ao máximo, 65535 conexões simultâneas.
+   
+   Como no NAT os clientes finais compartilham um único IP público, todas as portas desse IP serão distribuídas entre eles, sendo que para cada solicitação de conexão é inserido na tabela de tradução de endereços o par $ ( IP_{publico}, \; Porta_{publica} ) $ associado com o par $ ( IP_{privado}, \; Porta_{privada} ) $ de forma aleatória e não conflituosa caso o par já exista na tabela, dado um tempo de vida para esse binding. Essa técnica tradicional de NAT é conhecida como masquerade, por mascarar toda rede privada por trás dele através de um único IP.
+   
+   Embora essa técnica resolva o problema da escassez de endereços públicos, existe uma particularidade que não pode ser omitida. De acordo com o Art. 13 do Marco Civil da Internet (Lei nº 12.965/2014), ``na provisão de conexão à internet, cabe ao administrador de sistema autônomo respectivo o dever de manter os registros de conexão (...) pelo prazo de 1 (um) ano'', sendo que um registro de conexão é definido pelo ``conjunto de informações referentes à data e hora de início e término de uma conexão à internet, sua duração e o endereço IP utilizado pelo terminal'' \cite{lei12965}. A lei ainda destaca no Art. 22. que um juiz pode ordenar ao ISP o fornecimento dos registros de conexão à internet de um determinado cliente com a finalidade de obtenção de provas para processos judiciais.
+   
+   Ou seja, o ISP tem a obrigação legal de manter o rastreio sobre qual IP cada um de seus clientes utilizou para navegar na internet, pois caso ele esteja utilizando a rede para cometer algum crime, a polícia conseguirá encontrá-lo. Isso parte do princípio de que na internet todos devem ser identificados pelo IP como sendo seu endereço virtual, porém o NAT masquerade quebra essa identidade por não ser determinístico na tradução do endereço. Por isso um ISP não pode simplesmente resolver a escassez por IPs utilizando uma metodologia de NAT desenvolvida para redes SOHO \footnote{SOHO são redes de escritórios domésticos e de pequenas empresas.}, deve-se utilizar de técnica específica e determinística por questões legais, chamada por CGNAT e também conhecido por NAT da operadora.
+   
+   Observando os requisitos definidos pelo Art. 13 da Lei nº 12.965/2014 e relacionando-os com a infraestrutura de um concentrador, devemos registrar o timestamp de início e de fim da sessão PPPoE do cliente bem como qual o IP foi disponibilizados a ele nessa sessão. Salvar essas informações é simples quando se utiliza de um servidor RADIUS \footnote{A Minasnet utiliza o FreeRADIUS \url{https://freeradius.org}.}, pois a função básica desse serviço é autorizar a conexão de assinantes, atribuindo IP e armazenando em log as informações de acesso.
+
+   De acordo com os requisitos para implementação do CGNAT conforme RFC6888 \cite{rfc6888}, que além de estabelecer como obrigatório comportamento entre mapeamento direto entre os pools de endereços públicos e do espaço compartilhado, está em consonâcia com o Marco Civil da Internet no quesito de logging das informações do assinante conectado. A diferença é que o Marco Civil estabelece normas tipicamente orientadas para provedores que entregam somente IP público para seus clientes, por não estabelecer uma regra de registro de número de porta nas conexões. A RFC6888 é mais ampla por contemplar as necessidades de registro de conexões através de CGNAT para garantir o rastreio da identidade dos clientes na internet, definindo como parâmetros para log:
+   
+   \begin{itemize}
+       \item O protocolo de transporte;
+       \item IP interno;
+       \item IP externo de origem;
+       \item Porta externa de origem;
+       \item Timestamp.
+   \end{itemize}
+
+   Vale ressaltar que IP externo de origem e porta externa de origem são valores do lado do provedor, sendo que IP de destino e porta de destino seriam do lado da aplicação. Não é recomendado armazenar informações de destino dos pacotes, uma vez que isso quebraria a privacidade de navegação assinantes por rastrear tudo que ele tem acessado na internet \cite{rfc6888}.
+
+   O problema de se seguir à risca os cinco tópicos definidos acima é que demandaria muito espaço em disco para a manutenção do rastreio das conexões, pois para cada novo registro na tabela de tradução de endereços seria necessário armazenar no banco de dados do log uma linha correspondente com as informações supracitadas. Seria um volume tão grande de dados que até uma consulta para atender a uma solicitação judicial poderia ser demorada, lembrando que o banco de dados mantém por 1 ano todas as informações.
+
+   A solução desse problema é utilizar da técnica de netmap, que faz mapeamento direto entre uma faixa contígua de portas correspondentes entre os IPs públicos e privados, dimensionada com tamanho padronizado. Por exemplo, se for padronizado o tamanho da faixa de portas como 2.000, as portas $ [2000, \; 3999] $ do IP 203.0.113.1 seriam destinadas ao cliente 100.64.8.0, a subsequente $ [4000, \; 5999] $ ao 100.64.8.1 e assim por diante. Com o netmap só é necessário registrar em log o IP interno do cliente e os timestamps de início e de fim da sessão PPPoE, resultando em uma redução considerável no volume de dados, pois serão somente três campos registrados ao invés dos cinco, além de inserir novas linhas na base de dados somente quado o cliente conectar e simplesmente atualizar o registro quando desconectar, pois uma forma de implementação pode deixar o campo timestamp de desconexão null até que a desconexão aconteça e efetue o armazenamento da data-hora.
+
+   Apesar de o netmap não gerar alto volume de dados de log de conexão dos assinantes, para que seja uma técnica suficiente na implementação do CGNAT é preciso manter documentado as regras de mapeamento de IP-porta. A utilização de uma planilha é a maneira mais prática para tal tarefa. Na Minasnet é mantida uma planilha na qual as informações são registradas de acordo com colunas contendo:
+
+   \begin{itemize}
+       \item Nome do concentrador alvo do CGNAT;
+       \item Franquia;
+       \item Sub-rede interna;
+       \item Sub-rede externa;
+       \item Timestamp de início de vigência da regra.
+       \item Anotações.
+   \end{itemize}
+   
+   Os dois primeros items são apenas por questão de organização, pois existem dezenas de concentradores no ISP e todos estão documentados nessa planilha, sendo somente as informações de mapeamento de redes interna e externa e o timestamp relevantes para eficácia do registro. As anotações tem informações sobre desativação da regra de CGNAT ou modificações nas redes, não sendo criado mais campos específicos porque o objetivo é que seja alterado o mínimo possível. Até hoje, poucas vezes houveram alterações no mapeamento das sub-redes. 
+
+    A Minasnet adota por padrão a disponibilização de 2.000 portas para cada cliente atrás do CGNAT, com o os limites inferiores e superiores das faixas de portas sendo 1536 e 65535, respectivamente. Isso significa que, para cada IP público do CGNAT do ISP, existem 32 clientes internos navegando através dele. Esse dimensionamento de 1 IP externo para 32 internos denomina a razão de compartilhamento 1:32. As portas de uso reservado (0-1023) não são usadas e a numeração começa a partir de 1536 por questões de arredondamento de cálculos.
+    
+    Os cálculos a seguir demonstram o dimensionamento do mapeamento de portas descrito. O primeiro passo é verificar a quantidade de portas $ \Delta $ que estão sendo dedicadas ao CGNAT por um único IP, simplesmente subtraindo os limites de portas definidos e somando 1, pois a primeira porta também é contabilizada:
+
+    \begin{equation}
+        \Delta = porta_{maior} - porta_{menor} + 1
+               = 65535 - 1536 + 1
+               = 64000
+    \end{equation}
+    
+    O que resulta em 64000 portas. Como cada IP interno tem 2000 portas mapeadas para ele, então a quantidade de IPs internos $ n $ para cada IP público será:
+
+    \begin{equation}
+        n = \frac{64000}{2000}
+          = 32
+    \end{equation}
+
+    O que resulta na razão 1:32.
+
+    Como dito anteriormente, um concentrador da Minasnet normalmente é dimensionado para atender até 1024 clientes. Então, quantos IPs internos e externos seriam necessários para implentar CGNAT conforme as regras definidas até aqui? A quantidade de IPs internos é direta: 1024, pois cada IP interno atende um único cliente. A quantidade de IPs externos é obtida tirando a razão 1024 por 32, pois a razão de compartilhamento dada é 1:32, o que resulta em 32 IPs. Então, nesse concentrador deve ser criado uma mapeamento de uma rede interna com 1024 endereços (/22) para uma rede externa de 32 endereços (/27).
+    
+    Calcular mapeamentos para outros prefixos de rede é simples, pois seguem a mesma lógica usada no mapeamento /22 entre /27. O quadro \ref{tab:netmap} mostra alguns dos mapeamentos que são possíveis de serem feitos seguindo a metodologia usada aqui. A demonstração pode ser feita alterando os valores correspondentes dos cálculos supracitados, em sempre será obtida a razão constante de 1:32 entre IP externo e interno.
+
+    \begin{quadro}[htb]
+        \begin{center}
+            \caption{Mapeamento direto entre sub-redes internas/externas usando CGNAT 1:32.} 
+            \label{tab:netmap}
+            \vspace{0.2cm}
+            \footnotesize
+            \begin{tabular}{|c|c|c|}
+            \hline
+            Prefixo privado & Prefixo público & Quantidade de clientes \\
+            \hline
+            \hline
+            /22 & /27 & 1024 \\
+            /23 & /28 & 512 \\
+            /24 & /29 & 256 \\
+            /25 & /30 & 128 \\
+            /26 & /31 & 64 \\
+            /27 & /32 & 32 \\
+            \hline 
+            \end{tabular}
+        \end{center}
+        % \centering {\small Fonte: Próprio do autor} 
+    \end{quadro}
+
+Implementação com Python e RouterOS.
+
