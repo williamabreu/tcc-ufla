@@ -31,6 +31,9 @@
   every node/.style = {circle, black, draw=black},
 }
 
+\usepackage[final]{pdfpages}     % para incluir pdf
+\setboolean{@twoside}{false}
+
 % cores para os links cruzados
 \usepackage{color}
 \definecolor{rltred}{rgb}{0.2,0,0}
@@ -43,7 +46,7 @@
   filecolor=rltgreen,   % \href{...} local file
   linkcolor=rltred,     % \ref{...} and \pageref{...}
   citecolor=rltgreen,
-  pdftitle={Administração de Serviços de Redes de Computadores em um Provedor de Acesso à Internet},
+  pdftitle={Administração de Serviços de Rede em um Provedor de Acesso à Internet},
   pdfauthor={William dos Santos Abreu},
   pdfsubject={O objetivo deste documento é descrever as atividades realizadas como administrador de infraestrutura de Tecnologias da Informação e Comunicação (TICs).},
   pdfkeywords={1. Redes de Computadores. 2. Segurança da Informação.}
@@ -99,13 +102,13 @@
 
 % Especificando hifenizações que por ventura LaTeX não saiba fazer
 % Por padrão 99,9% dos termos em português devem ser hifenizados corretamente.
-\hyphenation{hardware software Li-nux RouterOS}
+\hyphenation{hardware software Linux RouterOS MikroTik}
 
 % ==============================================================================
 % Dados da monografia, capa: autor, titulo, banca, etc... - SUBSTITUA DE ACORDO
 % ==============================================================================
 \author{William dos Santos Abreu}
-\title{Administração de Serviços de Redes de Computadores em um Provedor de Acesso à Internet}
+\title{Administração de Serviços de Rede em um Provedor de Acesso à Internet}
 % \subtitle{}
 % \engtitle{}
 % \engsubtitle{}
@@ -113,7 +116,7 @@
 \date{2020}
 \tipo{Relatório de estágio supervisionado apresentado à Universidade Federal de Lavras, como parte das exigências do Curso de Ciência da Computação, para a obtenção do título de Bacharel.}
 % use \orientador ou \orientadora quando for o caso
-\orientador{Prof. DSc. Neumar Costa Malheiros}
+\orientador{Prof. Dr. Neumar Costa Malheiros}
 % use \coorientador ou \coorientadora quando for o caso
 % \coorientadora{} % comente se não tiver coorientador
 \local{Lavras -- MG}
@@ -219,9 +222,10 @@
   }
 
   % palavras-chave
-  \palchaves{Internet.\; Redes de Computadores.\; Segurança Computacional.}
+  \palchaves{CGNAT.\; SSL VPN.\; Controle de acesso.\; Regras de firewall.}
 
-  \resumo{O objetivo deste documento é descrever como são realizadas as atividades de administrador de infraestrutura de Tecnologias da Informação e Comunicação (TICs) no centro de operações de rede (NOC) de um provedor de acesso à internet (ISP), através de uma visão técnico-científica do assunto. O trabalho mostra como é dimensionada uma rede IPv4 e como é implementado CGNAT (recurso à escassez de endereços enquanto o IPv6 não é uma tecnologia de ponta-a-ponta). Também descreve como é feita a utilização dos recursos de segurança computacional aplicados às redes para controle de acesso, utilizando-se de firewall e de VPN para limitar o acesso a equipamentos conforme o princípio do privilégio mínimo. As atividades foram desenvolvidas como estágio supervisionado no NOC da Minasnet Telecomunicações Ltda, operadora de internet que presta serviço em 19 cidades no sul de Minas Gerais.}
+  \resumo{Os provedores de acesso à internet tem o desafio de manter ininterrupto o serviço de rede aos assinantes, garantindo velocidade e estabilidade na conexão. Embora esse seja o objetivo comercial dessas empresas, existem vários problemas operacionais que demandam da atenção dos administradores da rede para garantir pleno funcionamento da operadora. Um dos problemas enfrentados é a escassez de endereços IPv4, que impõe limitações na conectividade à internet. Outro problema tange à segurança da rede, uma vez que dispositivos conectados estão suscetíveis a ataques, que podem comprometer a disponibilidade do serviço. O objetivo deste trabalho em particular foi desenvolver soluções para problemas que envolvem a conectividade dos assinantes à internet, obedecendo a lei do Marco Civil da Internet e mantendo os acordos cooperativos firmados entre os sistemas autônomos e o CERT.br para manutenção da segurança da internet brasileira. No trabalho foi feito dimensionamento de uma rede IPv4 e implementado CGNAT  como recurso à escassez de endereços (enquanto o IPv6 não é uma tecnologia de ponta-a-ponta), além de ter sido utilizado dos recursos de segurança computacional aplicados às redes para controle de acesso, utilizando-se de firewall e de VPN para limitar o acesso a equipamentos conforme o princípio do privilégio mínimo, bem como foram aplicados bloqueios em conexões suspeitas para mitigar ataques de negação de serviço. O trabalho possibilitou o aprofundamento prático na área de Sistemas de Computação, especificamente nos assuntos de Redes, Sistemas Distribuídos e Segurança Computacional, servindo de ponte entre a academia e o conhecimento técnico-científico utilizado no mercado. As atividades deste trabalho foram desenvolvidas como estágio supervisionado no centro de operações de rede da Minasnet Telecomunicações Ltda, operadora de internet que presta serviço em 21 cidades no sul de Minas Gerais.
+}
   
   % Resumo deve conter de 150 a 500 palavras
 
@@ -244,13 +248,13 @@
 
   % descomente para habilitar a lista desejada
   % \listofilustracoes  % - Não vou precisar
-  % \listoffigures
-  % \listofgraficos
+  \listoffigures
+  \listofgraficos
   % \listoftables       % - Não vou precisar
   \listofquadros      
   % \listofexemplos     % - Não vou precisar
   % \listofteoremas     % - Não vou precisar
-  \include{listadesiglas}
+  \include{Lista_Siglas}
   \tableofcontents
 
   \clearpage
@@ -259,10 +263,11 @@
 
   % ==============================================================================
   % incluindo os capitulos
-  \include{introducao}
-  \include{referencialteorico}
-  \include{atividadesrealizadas}
-  % \include{conclusao}
+  \include{Introducao}
+  \include{Referencial_Teorico}
+  \include{Enderecamento_IP}
+  \include{Seguranca_Rede}
+  \include{Conclusao}
 
   % ==============================================================================
   % Incluindo bibliografia
@@ -271,13 +276,14 @@
   \bibliographystyle{abntex2-alf}     % estilo para referências usando ABNT, precisa instalar o abntex para usar!!!
 
   % inclui Referências Bibliográficas
-  % inclui Referências Bibliográficas
-  % \referencias
-   \bibliography{referencias}               % arquivo exemplo refbib.bib
+  \referencias
+  \bibliography{referencias}               % arquivo exemplo refbib.bib
   % ==============================================================================
   % Incluindo anexos numerados com letras maiusculas.
-  % \apendices
-  % \include{apendice1}
+  \apendices
+  \include{Apendice_A}
+  \include{Anexo_A}
+  \include{Anexo_B}
 
   % ==============================================================================
   % Fim do texto

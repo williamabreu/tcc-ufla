@@ -1,0 +1,101 @@
+\begin{center}
+  \normalsize{\textbf{ANEXO B -- Um e-mail de alerta de segurança enviado pelo CERT.br}}
+\end{center}
+
+\pagestyle{empty} % remover numeração
+
+\begin{verbatim}
+From: "CERT.br" <cert@cert.br>
+Subject: Alerta: [AS 262488] Mikrotik Possivelmente Comprometido - SOCKS 4145
+Date: 3 June 2019 09:54:05 GMT-3
+To: contato@minasnet.net
+Cc: cert@cert.br
+Reply-To: cert@cert.br
+
+Caro responsável,
+
+Os IPs no log ao final dessa mensagem possivelmente são de dispositivos
+Mikrotik em sua rede que foram comprometidos e que estão sendo abusados
+intensamente para o envio de spam.
+
+Esse comprometimento habilita o serviço SOCKS na porta 4145/tcp
+que pode ser abusado para diversas atividades, principalmente para o
+envio de spam.
+
+Essas atividades estão consumindo recursos de sua rede e provavelmente
+incluindo seus IPs em listas de bloqueio.
+
+Se você não for a pessoa correta para corrigir este problema, por
+favor repasse essa mensagem para alguém da sua organização que possa
+fazê-lo.
+
+Gostaríamos de solicitar que:
+1. cada dispositivo associado aos IPs abaixo fosse revisado e, se
+  confirmada a suspeita de comprometimento, o problema seja resolvido
+  (com a desativação do serviço SOCKS, alteração das senhas e atualização
+   do RouterOS);
+2. aumente-se o nível de monitoração da rede para determinar se outros
+  dispositivos da sua rede também estão sofrendo do mesmo problema.
+
+Sugestões de como realizar esses dois itens seguem abaixo.
+
+* Como resolver o comprometimento dos dispositivos Mikrotik?
+ 1. Verifique a existência de um serviço SOCKS atendendo na
+    porta 4145/tcp, executando o seguinte comando:
+    /ip socks print
+    Se o serviço estiver marcado como habilitado (enabled = yes),
+    desabilite-o com o seguinte comando:
+    /ip socks set enable=no
+ 2. Atualize a versão do Router OS para a última versão
+    "Long-term/bugfix" ou "Stable/current", de acordo com as instruções
+    do fabricante disponíveis na seguinte URL:
+    https://wiki.mikrotik.com/wiki/Manual:Upgrading_RouterOS
+ 3. Apenas depois de atualizar o sistema altere a senha com o comando
+    abaixo:
+    /user set USUARIO password=NOVA_SENHA
+    onde USUARIO é o usuário utilizado para conectar no mikrotik
+
+* Como identificar outros dispositivos sendo abusados pela mesma
+ técnica?
+ Sugerimos também que monitore regularmente o tráfego de sua rede
+ através do uso de netflow para identificar esse problema. Uma
+ sugestão seria monitorar o tráfego na porta 4145/tcp e observar o
+ aumento anormal de conexões com destino às portas 25/tcp e 587/tcp.
+
+* O que é o CERT.br?
+ O CERT.br -- Centro de Estudos, Resposta e Tratamento de Incidentes
+ de Segurança no Brasil -- é o Grupo de Resposta a Incidentes de
+ Segurança para a Internet brasileira, mantido pelo NIC.br do Comitê
+ Gestor da Internet no Brasil.  É o grupo responsável por tratar
+ incidentes de segurança em computadores, envolvendo redes conectadas
+ à Internet brasileira.
+
+ IP              | ASN    | Porta | Status | Timestamp            | Resultado do 
+                                                                    Teste
+=============================================================================
+177.66.52.134    | 262488 |  4145 | OPEN   | 2019-06-03T08:50:01Z | SMTP banner: 
+                                                                    confirmed
+177.66.52.137    | 262488 |  4145 | OPEN   | 2019-05-27T18:02:30Z | SMTP banner: 
+                                                                    confirmed
+177.66.52.195    | 262488 |  4145 | OPEN   | 2019-05-28T20:55:06Z | SMTP banner: 
+                                                                    confirmed
+177.66.52.232    | 262488 |  4145 | OPEN   | 2019-05-28T20:55:17Z | SMTP banner: 
+                                                                    confirmed
+177.66.52.252    | 262488 |  4145 | OPEN   | 2019-05-29T22:44:48Z | SMTP banner: 
+                                                                    confirmed
+179.106.162.108  | 262488 |  4145 | OPEN   | 2019-05-27T23:52:08Z | SMTP banner: 
+                                                                    confirmed
+179.106.162.145  | 262488 |  4145 | OPEN   | 2019-05-27T18:04:40Z | SMTP banner: 
+                                                                    confirmed
+179.106.166.57   | 262488 |  4145 | OPEN   | 2019-05-30T14:10:38Z | SMTP banner: 
+                                                                    confirmed
+179.106.166.92   | 262488 |  4145 | OPEN   | 2019-05-27T18:04:41Z | SMTP banner: 
+                                                                    confirmed
+=============================================================================
+
+Cordialmente,
+--
+CERT.br/NIC.br
+<cert@cert.br>
+https://www.cert.br/
+\end{verbatim}
