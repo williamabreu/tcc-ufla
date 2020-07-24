@@ -120,11 +120,20 @@
 % use \coorientador ou \coorientadora quando for o caso
 % \coorientadora{} % comente se não tiver coorientador
 \local{Lavras -- MG}
-\bancaum{Prof. MSc. Antônio Banca Um}{UFM}
-\bancadois{Prof. DSc. João Banca Dois}{FCO}
-\bancatres{Profa. Esp. Eliza Banca Três}{BELMIS}
-\bancaquatro{Prof. Esp. Carlos Banca Quatro}{IBGPLUS}
-\defesa{30 de junho de 2020}
+\bancaum{Prof. Dr. Neumar Costa Malheiros}{UFLA}
+\bancadois{Prof. Dr. Luiz Henrique Andrade Correia}{UFLA}
+\bancatres{Prof. Dr. Hermes Pimenta de Moraes Júnior 
+}{UFLA}
+\bancaquatro{Prof. Dr. Joaquim Quinteiro Uchôa 
+}{UFLA}
+% \defesa{24 de agosto de 2020}
+
+% se vc já defendeu e tem o arquivo escaneado da folha de rosto, 
+% descomente e altere o nome do arquivo
+% DETALHE: está comendo 1cm do papel na margem superior!
+% \folhaAprovacaoAssinada[1]{pdf/folha-aprovacao}
+
+
 % ==============================================================================
 
 % ##################################################
@@ -200,9 +209,6 @@
 
 %##################################################
 
-% se vc já defendeu e tem o arquivo escaneado da folha de rosto, 
-% descomente e altere o nome do arquivo
-%\folhaAprovacaoAssinada{folharosto}
 
 % Aqui começa o documento propriamente dito
 \begin{document}
@@ -222,16 +228,15 @@
   }
 
   % palavras-chave
-  \palchaves{CGNAT.\; SSL VPN.\; Controle de acesso.\; Regras de firewall.}
+  \palchaves{CGNAT.\; VPN SSL.\; Controle de acesso.\; Regras de firewall.}
 
-  \resumo{Os provedores de acesso à internet tem o desafio de manter ininterrupto o serviço de rede aos assinantes, garantindo velocidade e estabilidade na conexão. Embora esse seja o objetivo comercial dessas empresas, existem vários problemas operacionais que demandam da atenção dos administradores da rede para garantir pleno funcionamento da operadora. Um dos problemas enfrentados é a escassez de endereços IPv4, que impõe limitações na conectividade à internet. Outro problema tange à segurança da rede, uma vez que dispositivos conectados estão suscetíveis a ataques, que podem comprometer a disponibilidade do serviço. O objetivo deste trabalho em particular foi desenvolver soluções para problemas que envolvem a conectividade dos assinantes à internet, obedecendo a lei do Marco Civil da Internet e mantendo os acordos cooperativos firmados entre os sistemas autônomos e o CERT.br para manutenção da segurança da internet brasileira. No trabalho foi feito dimensionamento de uma rede IPv4 e implementado CGNAT  como recurso à escassez de endereços (enquanto o IPv6 não é uma tecnologia de ponta-a-ponta), além de ter sido utilizado dos recursos de segurança computacional aplicados às redes para controle de acesso, utilizando-se de firewall e de VPN para limitar o acesso a equipamentos conforme o princípio do privilégio mínimo, bem como foram aplicados bloqueios em conexões suspeitas para mitigar ataques de negação de serviço. O trabalho possibilitou o aprofundamento prático na área de Sistemas de Computação, especificamente nos assuntos de Redes, Sistemas Distribuídos e Segurança Computacional, servindo de ponte entre a academia e o conhecimento técnico-científico utilizado no mercado. As atividades deste trabalho foram desenvolvidas como estágio supervisionado no centro de operações de rede da Minasnet Telecomunicações Ltda, operadora de internet que presta serviço em 21 cidades no sul de Minas Gerais.
-}
+  \resumo{Os provedores de acesso à internet têm o desafio de manter ininterrupto o serviço de rede aos assinantes, garantindo velocidade e estabilidade na conexão. Embora esse seja o objetivo comercial dessas empresas, existem vários problemas operacionais que demandam a atenção dos administradores da rede para garantir pleno funcionamento da operadora. Um dos problemas enfrentados é a escassez de endereços IPv4, que impõe limitações na conectividade à internet. Outro problema tange à segurança da rede, uma vez que dispositivos conectados estão suscetíveis a ataques, que podem comprometer a disponibilidade do serviço. O objetivo deste trabalho em particular foi desenvolver soluções para problemas que envolvem a conectividade dos assinantes à internet, obedecendo a lei do Marco Civil da Internet e mantendo os acordos cooperativos firmados entre os sistemas autônomos e o CERT.br para manutenção da segurança da internet brasileira. As atividades foram desenvolvidas como estágio supervisionado no centro de operações de rede da Minasnet Telecomunicações LTDA, operadora que presta serviço em 21 cidades no sul de Minas Gerais, onde foi feito o dimensionamento de redes IPv4 e foi implementado CGNAT como solução para a escassez de endereços (enquanto o IPv6 não é uma tecnologia de ponta-a-ponta). Além disso, foram aplicados recursos de segurança à rede, sendo utilizados VPN para controlar o acesso à intranet do provedor e firewall para bloquear conexões suspeitas com a finalidade de mitigar ataques de negação de serviço. O trabalho possibilitou o aprofundamento prático na área de Sistemas de Computação, especificamente nos assuntos de Redes, Sistemas Distribuídos e Segurança Computacional, servindo de ponte entre a academia e o conhecimento técnico-científico utilizado no mercado.}
   
   % Resumo deve conter de 150 a 500 palavras
 
   % keywords devem vir antes do abstract
-  \keywords{Summary. Words. Representative.} % keywords
-  \abstract{The abstract should contain representative words of the work content, located below the abstract, separated by two spaces, preceded by the keyword expression. These representative words are spelled with the first letter capitalized, separated by point.}
+  \keywords{CGNAT.\; SSL VPN.\; Access control.\; Firewall rules.} % keywords
+  \abstract{The internet service providers get the challenge in keeping uninterrupted the subscribers' networking service, ensuring speed and reliability in internet connection. Although this is the comercial goal for these enterprises, there are many operational problems that need the network administrators attention to guarantee plain working of the internet provider. One of the problems faced is the IPv4 addresses exhaustion, what imposes limitations on network connectivity. Another pertain to network security, since the connected devices are susceptible to attacks, that can compromise de service availability. The purpose of this work in particular was develop solutions for problems that involve the subscribers internet connectivity, obeying the Civil Rights Framework for the Internet and keeping the cooperative agreements established between the autonomous systems and the CERT.br for supporting the brazilian internet safety. The activities were developed as part of internship at Minasnet Telecomunicações LTDA's network operation center, enterprise that provides network service to 21 cities in the south of the state of Minas Gerais, where was made the sizing of IPv4 networks and was implemented CGNAT as solution for the addresses exhaustion (while IPv6 isn't a fully point-to-point technology). Besides, were applied security resources in the network, using VPN for controlling the access to the provider's intranet and firewall for blocking suspects connections for the purpose of mitigating denial of service attacks. The work made possible the practice deepen in the Computer Systems area, closely at the subjects of Networking, Distributed Systems and Computer Security, building a bridge between the academia and the market technological knowledge.}
 
   % ##################################################
 
@@ -282,6 +287,8 @@
   % Incluindo anexos numerados com letras maiusculas.
   \apendices
   \include{Apendice_A}
+  \include{Apendice_B}
+  \include{Apendice_C}
   \include{Anexo_A}
   \include{Anexo_B}
 

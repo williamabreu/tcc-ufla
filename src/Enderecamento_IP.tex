@@ -153,7 +153,7 @@
 
     A única ressalva é que, para o pleno funcionamento do NAT para pacotes de protocolos de camada 3 (ICMP), serão criadas regras em que não estarão definidos os items (\ref{nat:protocol} e (\ref{nat:toports}.
 
-    Tendo os parâmetros definidos, o template do comando a ser executado na CLI é dado conforme o exemplo da Figura \ref{fig:netmap_cli}. O método de utilização simplificada do {\tt netmap} foi obitido de \cite{maia2018} e é uma técnica de CGNAT horizontal.
+    Tendo os parâmetros definidos, o template do comando a ser executado na CLI é dado conforme o exemplo da Figura \ref{fig:netmap_cli}. O método de utilização simplificada do {\tt netmap} foi obitido de \cite{maia2018} e é uma técnica de CGNAT horizontal, ilustrada na Figura \ref{fig:cgnat_horizontal}.
 
     \begin{figure}[!htb]
         \centering
@@ -244,7 +244,7 @@
         {\small Fonte: do autor (2020).} 
     \end{figure}
     
-    A ferramenta desenvolvida foi nomeada como {\tt py-cgnat}. O código-fonte está disponível no GitHub\footnote{\url{https://github.com/williamabreu/py-cgnat}} do autor e o executável pode ser baixado através do repositório oficial do Python\footnote{\url{https://pypi.org/project/pycgnat/}}. O software foi desenvolvido seguindo as convenções do ecossistema Python e é {\tt open-source}, sendo lançado sob licença permissiva MIT para garantir liberdade de uso e de distribuição sem complicações. A versão 1.0b1 é a utilizada neste trabalho.
+    A ferramenta desenvolvida foi nomeada como {\tt py-cgnat}. O código-fonte está disponível no GitHub\footnote{\url{https://github.com/williamabreu/py-cgnat}.} do autor e o executável pode ser baixado através do repositório oficial do Python\footnote{\url{https://pypi.org/project/pycgnat/}.}. O software foi desenvolvido seguindo as convenções do ecossistema Python e é {\tt open-source}, sendo lançado sob licença permissiva MIT para garantir liberdade de uso e de distribuição sem complicações. A versão 1.0b1 é a utilizada neste trabalho.
     
     A seguir será utilizado o CON-PER-01 do Quadro \ref{tab:planilha_cgnat} para exemplificar o uso do programa {\tt py-cgnat} via terminal de comando. 
     
