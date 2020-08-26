@@ -1,36 +1,27 @@
 \chapter{ENDEREÇAMENTO IP}
+\label{cap:enderecamento}
 
-    O IP é a identificação que possibilita o tráfego de dados desde sua origem até o destino através da rede mundial de computadores, por isso é necessário fornecer endereços IP para todos os dispositivos que se conectarão à internet. Em um provedor, a rede (que é um conjunto de endereços IP) é dimensionada de acordo com a quantidade de clientes que serão atendidos dentro de uma determinada área de abrangência, que geralmente é atomizada por cidades.
+    O endereço IP é a identificação que possibilita o tráfego de dados desde sua origem até o destino através da rede mundial de computadores, por isso é necessário fornecer endereços IP para todos os dispositivos que se conectam à internet. Em um provedor, a rede (que utiliza um conjunto de IPs com mesmo prefixo) é dimensionada de acordo com a quantidade de clientes que serão atendidos dentro de uma determinada área de abrangência, que geralmente é atomizada por cidades.
 
 \section{Rede IP da Minasnet}
     
-    Na Minasnet, a rede é subdividida em áreas OSPF, sendo que cada área é associada a uma cidade. Zonas rurais e vilarejos recebem o mesmo código de área da cidade a qual pertencem. Assim, a sub-rede é dimensionada de acordo com o tamanho da cidade e com a quantidade de clientes associados àquela área, sendo geralmente um /24 o menor prefixo atribuído a uma área e um /22 à maior. Por exemplo, a franquia de Perdões tem uma rede /22, isso significa que existem 1024 endereços públicos dedicados a atenderem os clientes dessa cidade.
+    Na Minasnet, a rede é subdividida em áreas OSPF, sendo que cada área é associada a uma cidade. Zonas rurais e vilarejos recebem o mesmo código de área da cidade a qual pertencem. Assim, a sub-rede é dimensionada de acordo com o tamanho da cidade e com a quantidade de clientes associados àquela área. Geralmente, um bloco /24 de endereços é o menor espaço de endereçamento atribuído a uma área e um bloco /22 é o maior. Por exemplo, a franquia de Perdões tem uma rede /22, isso significa que existem 1024 endereços públicos dedicados para atendimento aos clientes dessa cidade.
     
-   Os IPs são associados aos CPEs (dispositivo \textit{gateway} da rede interna de um cliente) através de um túnel PPPoE fechado com o concentrador. Como o próprio nome sugere, o concentrador centraliza todas as conexões de camada 3 dos clientes conectados em um único equipamento. Entretanto, dependendo do hardware e da configuração do software de um equipamento concentrador, pode ser necessário a utilização de mais de um equipamento para dividir a carga do servidor PPPoE. 
+   Os IPs são associados aos CPEs (dispositivo \textit{gateway} da rede interna de um cliente) através de um túnel PPPoE fechado com o concentrador (B-RAS). Como o próprio nome sugere, o concentrador centraliza todas as conexões de camada 3 dos clientes conectados em um único equipamento. Entretanto, dependendo do hardware e da configuração do software de um equipamento concentrador, pode ser necessário a utilização de mais de um equipamento para dividir a carga do servidor PPPoE. 
    
-   Um exemplo disso na Minasnet foi a franquia de Oliveira, uma das mais recentemente atendidas pelo ISP. A princípio existia um único concentrador PPPoE que, devido à demanda de clientes entrantes, teve sua carga dividida com um segundo concentrador instalado junto a ele. O padrão atual da empresa é manter no máximo 1024 clientes em um único concentrador.
+   Na Minasnet, um exemplo disso foi a franquia de Oliveira, uma das mais recentemente atendidas pelo ISP. A princípio existia um único concentrador PPPoE que, devido à demanda de clientes entrantes, teve sua carga dividida com um segundo concentrador instalado junto a ele. O padrão atual da empresa é manter no máximo 1024 clientes em um único concentrador.
    
-   Para documentar a rede IP do AS (conjunto de todas as sub-redes públicas de um ISP), é utilizado o software PHPIPAM\footnote{PHPIPAM \url{https://phpipam.net} é um software \textit{open-source} de gerenciamento de endereços de rede (IP, VLAN e etc.).}. Nele é possível criar o aninhamento entre sub-redes e deixar descrito qual a finalidade de cada uma delas, facilitando consultas e manipulações de VLSM nessas redes dentro do próprio sistema. Tomando o exemplo de Perdões, no PHPIPAM exite uma rede com mesmo nome da cidade, na qual estão documentados todos os IPs públicos da rede /22 dimensionada para a mesma, além dos IPs privados utilizados na franquia, que estão contidos nas redes 10.0.0.0/8, 172.16.0.0/12 e 192.168.0.0/16, definidas pela RFC1918 \cite{rfc1918}, e o espaço compartilhado 100.64.0.0/10 definido pela RFC6598 \cite{rfc6598}. Dentro da rede IP pública, é reservada uma sub-rede para alocação de IP fixo e o restante dos IPs são alocados dinamicamente para os clientes.
+   Para documentar a rede IP do AS (conjunto de todas as sub-redes públicas de um ISP), é utilizado o software PHPIPAM\footnote{PHPIPAM \url{https://phpipam.net} é um software \textit{open-source} de gerenciamento de endereços de rede (IP, VLAN e etc.).}. Neste software é possível criar o aninhamento entre sub-redes e deixar descrito qual a finalidade de cada uma delas, facilitando consultas e manipulações de VLSM nessas redes dentro do próprio sistema. Tomando o exemplo de Perdões, no PHPIPAM existe uma rede com mesmo nome da cidade, na qual estão documentados todos os IPs públicos da rede /22 dimensionada para a mesma, além dos IPs privados utilizados na franquia, que estão contidos nas redes 10.0.0.0/8, 172.16.0.0/12 e 192.168.0.0/16, definidas pela RFC 1918 \cite{rfc1918}, e o espaço compartilhado 100.64.0.0/10 definido pela RFC 6598 \cite{rfc6598}. Dentro da rede IP pública, é reservada uma sub-rede para alocação de IP fixo e o restante dos IPs são alocados dinamicamente para os clientes.
    
-   Dado que a franquia de Perdões possui muito mais do que 1024 clientes, um \textit{pool}\footnote{Diferente de uma rede, que tem reservado o primeiro e o último endereço para o \textit{host} e para o \textit{broadcast} respectivamente, no \textit{pool} todos os endereços são alocados, inclusive 0 e 255.} de prefixo /22 não atenderia à demanda. A solução para a escassez de endereços na franquia é a utilização do artifício do NAT, disponibilizando IPs privados aos clientes e fazendo associação do par IP-porta com o IP público alvo do NAT. Redes privadas não devem ser anunciadas na internet pública e a única forma de comunicarem-se com o mundo é através do NAT. 
+   Dado que a franquia de Perdões possui muito mais do que 1024 clientes, um \textit{pool}\footnote{Diferente de uma rede, que tem reservado o primeiro e o último endereço para o \textit{host} e para o \textit{broadcast} respectivamente, no \textit{pool} todos os endereços são alocados, inclusive 0 e 255.} de prefixo /22 não atenderia à demanda. A solução para a escassez de endereços na franquia é a utilização do artifício do NAT, disponibilizando IPs privados aos clientes e fazendo associação do par IP-porta com o IP público de destino do NAT. Redes privadas não devem ser anunciadas na internet pública e a única forma de comunicarem-se com o mundo é através do NAT. 
    
-\section{Motivação para o uso de NAT}
-   
-   O NAT funciona por causa de ser a camada de transporte responsável em estabelece comunicação entre dois hosts e não a camada de rede, isto é, uma porta definida pelos respectivos sistemas operacionais dos hosts garante a conexão fim-a-fim na internet. Assim, a função do IP é rotear os pacotes e do TCP estabelecer a conexão HTTP, por exemplo. Um cliente com IP público dedicado tem a sua disposição 65535 portas, o que lhe daria a possibilidade de estabelecer, teoricamente ao máximo, 65535 conexões simultâneas.
-   
-   Como no NAT os clientes finais compartilham um único IP público, todas as portas desse IP serão distribuídas entre eles, sendo que para cada solicitação de conexão será inserido na tabela de tradução de endereços o par $ ( IP_{publico}, \; Porta_{publica} ) $ associado com o par $ ( IP_{privado}, \; Porta_{privada} ) $ de forma aleatória e não conflituosa caso o par já exista na tabela, dado um tempo de vida para esse vínculo. Essa técnica tradicional de NAT é conhecida como \textit{masquerade}, por mascarar toda rede privada atrás do NAT através de um único IP.
-   
-\section{Aspectos legais quanto ao uso de NAT}
-
-   Embora a técnica de NAT \textit{masquerade} resolva o problema da escassez de endereços públicos, existe uma particularidade que não pode ser omitida. De acordo com o Art. 13 do Marco Civil da Internet (Lei nº 12.965/2014), ``na provisão de conexão à internet, cabe ao administrador de sistema autônomo respectivo o dever de manter os registros de conexão [...] pelo prazo de 1 (um) ano'', sendo que um registro de conexão é definido pelo ``conjunto de informações referentes à data e hora de início e término de uma conexão à internet, sua duração e o endereço IP utilizado pelo terminal'' \cite{lei12965}. A lei ainda destaca no Art. 22 que um juiz pode ordenar ao ISP o fornecimento dos registros de conexão à internet de um determinado cliente com a finalidade de obtenção de provas para processos judiciais.
-   
-   Dessa forma, o ISP tem a obrigação legal de manter o rastreio sobre qual IP cada um de seus clientes utilizou para navegar na internet, pois caso ele esteja utilizando a rede para cometer algum crime, a polícia conseguirá encontrá-lo. Isso parte do princípio de que na internet todos devem ser identificados pelo IP como sendo seu endereço virtual, porém o NAT \textit{masquerade} quebra essa identidade por não ser determinístico na tradução do endereço. Por isso um ISP não pode simplesmente resolver a escassez por IPs utilizando uma metodologia de NAT desenvolvida para redes de escritórios domésticos e de pequenas empresa, deve ser utilizada técnica específica e determinística por questões legais, chamada por CGNAT e também conhecido como NAT da operadora.
-
 \section{Metodologia para implementação de CGNAT}
 
-   Observando os requisitos definidos pelo Art. 13 da Lei nº 12.965/2014 e relacionando-os com a infraestrutura de um concentrador, devemos registrar o \textit{timestamp} de início e de fim da sessão PPPoE do cliente bem como qual o IP foi disponibilizados a ele durante essa sessão. Salvar essas informações é simples quando se utiliza de um servidor RADIUS\footnote{A Minasnet utiliza o FreeRADIUS \url{https://freeradius.org}.}, pois a função básica desse serviço é autorizar a conexão de assinantes, atribuindo IP e armazenando o \textit{log} das informações de acesso.
+   Observando os requisitos definidos pelo Art. 13 da Lei nº 12.965/2014, descritos na Seção \ref{sec:marco_civil}, e relacionando-os com a infraestrutura de um concentrador, devemos registrar o \textit{timestamp} de início e de fim da sessão PPPoE do cliente bem como qual o IP foi disponibilizado a ele durante essa sessão. Salvar essas informações é simples quando se utiliza um servidor RADIUS\footnote{A Minasnet utiliza o FreeRADIUS \url{https://freeradius.org}.}, pois a função básica desse serviço é autorizar a conexão de assinantes, atribuindo IP e armazenando o \textit{log} das informações de acesso.
 
-   De acordo com os requisitos para implementação do CGNAT conforme RFC6888 \cite{rfc6888}, que além de estabelecer como obrigatório comportamento entre mapeamento direto entre os \textit{pools} de endereços públicos e do espaço compartilhado, está em consonâcia com o Marco Civil da Internet no quesito de registro das informações do assinante conectado. A diferença é que o Marco Civil estabelece normas tipicamente orientadas para provedores que entregam somente IP público para seus clientes, por não estabelecer uma regra de registro de número de porta nas conexões. A RFC6888 é mais ampla por contemplar as necessidades de registro de conexões através de CGNAT para garantir o rastreio da identidade dos clientes na internet, definindo como parâmetros para \textit{log}:
+   A RFC 6888 estabelece requisitos para implementação do CGNAT de maneira segura. Um ponto importante dessa RFC é a definição obrigatória do mapeamento direto entre os \textit{pools} de endereços públicos e privado, imprescindível para que o CGNAT seja determinístico. Outro ponto importante é a manutenção de registro das informações do assinante conectado, assim como especificado pelo Marco Civil da Internet.
+   
+   Embora a RFC 6888 esteja em consonância com o Marco Civil da Internet, existe divergência. A diferença é que o Marco Civil estabelece normas tipicamente orientadas para provedores que entregam somente IP público para seus clientes, por não estabelecer uma regra de registro de número de porta nas conexões. A RFC 6888 é mais ampla por contemplar as necessidades de registro de conexões através de CGNAT para garantir o rastreio da identidade dos clientes na internet, definindo como parâmetros para \textit{log} \cite{rfc6888}:
    
    \begin{enumerate}[label=\alph*)]
        \item o protocolo de transporte;
@@ -40,12 +31,14 @@
        \item o \textit{timestamp} de registro.
    \end{enumerate}
 
-   Vale ressaltar que IP externo de origem e porta externa de origem são valores do lado do provedor, sendo que IP de destino e porta de destino seriam do lado da aplicação. Não é recomendado armazenar informações de destino dos pacotes, uma vez que isso quebraria a privacidade de navegação dos assinantes por rastrear tudo que ele tem acessado na internet \cite{rfc6888}.
+   Vale ressaltar que IP externo de origem e porta externa de origem são valores do lado do provedor, sendo que IP de destino e porta de destino seriam do lado da aplicação. Não é recomendado armazenar informações de destino dos pacotes, uma vez que isso quebraria a privacidade de navegação dos assinantes por rastrear tudo que eles tem acessado na internet \cite{rfc6888}.
 
-   O problema de se seguir à risca os cinco tópicos definidos acima é que demandaria muito espaço em disco para a manutenção do rastreio das conexões, pois para cada novo registro na tabela de tradução de endereços seria necessário armazenar no banco de dados de \textit{log} uma linha correspondente com as informações supracitadas. Seria um volume tão grande de dados que até uma consulta para atender a uma solicitação judicial poderia ser demorada, lembrando que o banco de dados mantém por 1 ano todas as informações.
+   O problema de se seguir à risca os cinco parâmetros definidos acima é que demandaria muito espaço em disco para a manutenção do rastreio das conexões, pois seria necessário armazenar no banco de dados de \textit{log} cada novo registro na tabela de tradução de endereços. Seria um volume tão grande de dados que até uma consulta para atender a uma solicitação judicial poderia ser demorada, lembrando que o banco de dados deve manter por 1 ano todas as informações.
 
-   A solução desse problema é utilizar de técnicas que fazem mapeamento direto de portas entre uma faixa contígua de portas correspondentes entre os IPs públicos e privados, dimensionada com tamanho padronizado. Com o mapeamento de portas só é necessário registrar em \textit{log} o IP interno do cliente e os \textit{timestamps} de início e de fim da sessão PPPoE, resultando em uma redução considerável no volume de dados, pois serão somente três campos registrados ao invés dos cinco, além de inserir novas linhas na base de dados somente quado o cliente conectar e simplesmente atualizar o registro quando desconectar, pois uma forma de implementação pode deixar o campo \textit{timestamp} de desconexão \textit{null} até que a desconexão aconteça e efetue o armazenamento da data-hora.
-
+   A solução desse problema é utilizar técnicas que fazem mapeamento direto entre uma faixa contígua de portas, de tamanho padronizado, para os IPs públicos e privados. Com o mapeamento de portas, só é necessário registrar em \textit{log} o IP interno do cliente e os \textit{timestamps} de início e de fim da sessão PPPoE, resultando em uma redução considerável no volume de dados, pois serão somente três campos registrados ao invés dos cinco. 
+ 
+   Outra melhoria para redução do volume de dados é utilizar dois campos de \textit{timestamp} ao invés de um só -- um para o momento de conexão e outro para o de desconexão. Assim, a inserção de novas linhas na base de dados será necessária somente quado o cliente conectar, inserindo o \textit{timestamp} no campo de conexão e deixando o de desconexão \textit{null} enquanto o cliente estiver conectado. No momento da desconexão, basta atualizar o campo \textit{null} com a data e hora da desconexão.
+ 
    Apesar de o mapeamento de portas não gerar alto volume de dados de \textit{log} de conexão dos assinantes, para que seja uma técnica suficiente na implementação do CGNAT é preciso manter documentadas as regras de mapeamento de IP-porta. A utilização de uma planilha é a maneira mais prática para realizar tal tarefa. Na Minasnet, é mantida uma planilha na qual as informações são registradas de acordo com colunas contendo:
 
    \begin{enumerate}[label=\alph*)]
@@ -80,7 +73,7 @@
     \end{quadro}
 
 
-    A Minasnet adota por padrão a disponibilização de 2.000 portas para cada cliente atrás do CGNAT, com o os limites inferiores e superiores das faixas de portas sendo 1536 e 65535, respectivamente. Isso significa que, para cada IP público do CGNAT do ISP, existem 32 clientes internos navegando através dele. Esse dimensionamento de 1 IP externo para 32 internos denomina a razão de compartilhamento 1:32. As portas de uso reservado (0-1023) não são usadas e a numeração começa a partir de 1536 por questões de arredondamento de cálculos.
+    A Minasnet adota por padrão a disponibilização de 2.000 portas para cada cliente atrás do CGNAT, definindo o intervalo da faixa entre 1536 e 65535. Isso significa que, para cada IP público do CGNAT do ISP, existem 32 clientes internos conectados à internet através dele. Esse dimensionamento de 1 IP externo para 32 internos denomina a razão de compartilhamento 1:32. As portas de uso reservado (0-1023) não são usadas e a numeração começa a partir de 1536 por questões de arredondamento de cálculos.
     
     Os cálculos a seguir demonstram o dimensionamento do mapeamento de portas descrito. O primeiro passo é verificar a quantidade de portas $ \Delta $ que estão sendo dedicadas ao CGNAT por um único IP, simplesmente subtraindo os limites de portas definidos e somando 1, pois a primeira porta também é contabilizada:
 
@@ -97,9 +90,7 @@
           = 32
     \end{equation}
 
-    O que resulta na razão 1:32.
-
-    Como dito anteriormente, um concentrador da Minasnet normalmente é dimensionado para atender até 1024 clientes. Então, quantos IPs internos e externos seriam necessários para implementar CGNAT conforme as regras definidas até aqui? A quantidade de IPs internos é direta: 1024, pois cada IP interno atende um único cliente. A quantidade de IPs externos é obtida tirando a razão 1024 por 32, pois a razão de compartilhamento dada é 1:32, o que resulta em 32 IPs. Então, nesse concentrador deve ser criado uma mapeamento de uma rede interna com 1024 endereços (/22) para uma rede externa de 32 endereços (/27).
+    Como dito anteriormente, um concentrador da Minasnet normalmente é dimensionado para atender até 1024 clientes. De acordo com a proporção 1:32, são necessários 1024 IPs internos e 32 IPs externos  para implementação do CGNAT nesse caso. A quantidade de IPs externos é obtida tirando a razão 1024 por 32, pois a razão de compartilhamento dada é 1:32, o que resulta em 32 IPs. Então, nesse concentrador deve ser criado uma mapeamento de uma rede interna com 1024 endereços (/22) para uma rede externa de 32 endereços (/27).
     
     Calcular mapeamentos para outros prefixos de rede é simples, pois seguem a mesma lógica usada no mapeamento /22 entre /27. O Quadro \ref{tab:netmap} mostra alguns dos mapeamentos que são possíveis de serem feitos seguindo a metodologia usada aqui. A demonstração pode ser feita alterando os valores correspondentes dos cálculos supracitados, em sempre será obtida a razão constante de 1:32 entre IP externo e interno.
 
@@ -131,29 +122,31 @@
 
 \subsection{Implementação de CGNAT no RouterOS}
 
-    Até aqui, foi fundamentada a metodologia utilizada para o CGNAT. Agora será apresentada a implementação das regras em roteadores MikroTik através do sistema operacional embarcado RouterOS\footnote{RouterOS \url{https://mikrotik.com/software} é o sistema operacional nativo dos equipamentos MikroTik, sendo um software proprietário com \textit{kernel} Linux.}, com geração das regras através de ferramenta desenvolvida em Python\footnote{Python \url{https://www.python.org/} é uma linguagem de programação interpretada e multiplataforma.}.
+    Até aqui, foi fundamentada a metodologia utilizada para o CGNAT. Nesta seção, será apresentada a implementação das regras em roteadores MikroTik através do sistema operacional embarcado RouterOS\footnote{RouterOS \url{https://mikrotik.com/software} é o sistema operacional nativo dos equipamentos MikroTik, sendo um software proprietário com \textit{kernel} Linux.}, com geração das regras através de ferramenta desenvolvida em Python de autoria própria.
+    
+    %\footnote{Python \url{https://www.python.org/} é uma linguagem de programação interpretada e multiplataforma.}.
     
     O primeiro passo para o desenvolvimento prático do CGNAT é entender o que o RouterOS nos proporciona para atingir esse objetivo. Por ser baseado em Linux, a ideia básica é construir as regras de NAT através do módulo de firewall do sistema, pois o NAT é interpretado como uma regra de firewall por fazer modificação no cabeçalho do dos pacotes de dados ao alterar os valores de endereço e de porta originais.
 
     O módulo utilizado é a tabela NAT do firewall do RouterOS, sendo necessário configurar os seguintes parâmetros na geração das regras conforme definidos na documentação \cite{natmikrotik}:
 
     \begin{enumerate}[label=\alph*)]
-        \item \label{nat:action} {\tt action}, sendo a ação executada pela regra o {\tt netmap}, que consiste no mapeamento direto entre as redes interna e externa;
+        \item \label{nat:action} {\tt action}, especifica a ação que deve ser executada; neste caso, a ação definida foi o {\tt netmap}, que consiste no mapeamento direto entre as redes interna e externa;
         
-        \item \label{nat:chain} {\tt chain}, sendo configurado como {\tt srcnat}, pois os pacotes alvos da regra originam-se na rede interna ao firewall; 
+        \item \label{nat:chain} {\tt chain}, é configurado como {\tt srcnat}, pois os pacotes alvos da regra originam-se na rede interna ao firewall; 
         
-        \item \label{nat:protocol} {\tt protocol}, sendo configurados tanto TCP e UDP individualmente; 
+        \item \label{nat:protocol} {\tt protocol}, são configurados tanto TCP e UDP individualmente; 
         
-        \item \label{nat:srcaddress} {\tt src-address}, sendo a sub-rede interna;
+        \item \label{nat:srcaddress} {\tt src-address}, é a sub-rede interna;
         
-        \item \label{nat:toaddress} {\tt to-addresses}, sendo a sub-rede externa;
+        \item \label{nat:toaddress} {\tt to-addresses}, é a sub-rede externa;
         
-        \item \label{nat:toports} {\tt to-ports}, sendo a faixa de portas do IP público alocada.
+        \item \label{nat:toports} {\tt to-ports}, é a faixa de portas do IP público alocada.
     \end{enumerate}
 
-    A única ressalva é que, para o pleno funcionamento do NAT para pacotes de protocolos de camada 3 (ICMP), serão criadas regras em que não estarão definidos os items (\ref{nat:protocol} e (\ref{nat:toports}.
+    A única ressalva é que, para o pleno funcionamento do NAT para pacotes de protocolos de camada 3 (ICMP), devem ser criadas regras em que não estejam definidos os itens (\ref{nat:protocol} e (\ref{nat:toports}.
 
-    Tendo os parâmetros definidos, o template do comando a ser executado na CLI é dado conforme o exemplo da Figura \ref{fig:netmap_cli}. O método de utilização simplificada do {\tt netmap} foi obitido de \cite{maia2018} e é uma técnica de CGNAT horizontal, ilustrada na Figura \ref{fig:cgnat_horizontal}.
+    Com os parâmetros definidos, o template do comando a ser executado na CLI é dado conforme o exemplo da Figura \ref{fig:netmap_cli}. O método de utilização simplificada do {\tt netmap} foi obtido de \cite{maia2018} e é uma técnica de CGNAT horizontal, ilustrada na Figura \ref{fig:cgnat_horizontal}. Neste exemplo, são utilizadas as sub-redes indicadas no exemplo do CON-PER-01 no Quadro \ref{tab:planilha_cgnat}. Pode-se notar que foi utilizado um prefixo /27 ao invés de um /22 no comando, isso acontece porque para que a regra de {\tt netmap} faça o mapeamento direto, as redes devem ter o mesmo prefixo para que a correspondência entre os IPs seja possível. Assim, uma rede /22 deve ser subdividida em 32 sub-redes /27 para que seja feito o mapeamento com uma rede pública de prefixo /27. Para fazer o casamento entre outros valores de prefixos, o princípio é o mesmo.
 
     \begin{figure}[!htb]
         \centering
@@ -174,11 +167,11 @@
         {\small Fonte: do autor (2020).} 
     \end{figure}
 
-    O exemplo utilizado no comando acima usa das sub-redes indicadas no exemplo do CON-PER-01 no Quadro \ref{tab:planilha_cgnat}. Pode-se notar que foi utilizado um prefixo /27 ao invés de um /22 no comando, isso acontece porque para que a regra de netmap faça o mapeamento direto, as redes devem ter o mesmo prefixo para que a correspondência entre os IPs seja possível. Assim, uma rede /22 deve ser subdividida em 32 sub-redes /27 para que seja feito o mapeamento com uma rede pública de prefixo /27. Para fazer o casamento entre outros valores de prefixos, o princípio é o mesmo.
     
-    Acontece que, fazer geração manual de todas essas regras é um trabalho extenso e cansativo, que pode ficar sujeito a falhas humanas. Para isso, foi desenvolvido um utilitário de CLI para geração das regras para construir {tt netmap} entre qualquer prefixo, desde que respeite a razão 1:32. O software foi desenvolvido em Pyhton, o que permite que seja usado em qualquer sistema operacional que tenha o ambiente de execução Python instalado.
+    
+    Acontece que, fazer geração manual de todas essas regras é um trabalho extenso e cansativo, que pode ficar sujeito a falhas humanas. Para isso, foi desenvolvido um utilitário de CLI para geração das regras para construir {\tt netmap} entre qualquer prefixo, desde que respeite a razão 1:32. O software foi desenvolvido em Pyhton.%, o que permite que seja usado em qualquer sistema operacional que tenha o ambiente de execução Python instalado.
 
-    O fundamento utilizado na construção do programa baseia-se na geração de uma árvore binária oriunda das subdivisões recursivas de uma rede privada de determinado prefixo, situada na raíz, até que chegue em uma camada em que as folhas tenham o mesmo prefixo que a rede pública, procedimento ilustrado na Figura \ref{fig:arvore_binaria}. A partir daí, o algoritmo obtém uma lista com todas as sub-redes formadas pelas folhas dessa árvore, e gera as regras de {\tt netmap} conforme definido no template da Figura \ref{fig:netmap_cli}, incrementando o número de portas em um valor fixo de 2.000. 
+    O fundamento utilizado na construção do programa baseia-se na geração de uma árvore binária oriunda das subdivisões recursivas de uma rede privada de determinado prefixo, situada na raiz, até que chegue em uma camada em que as folhas tenham o mesmo prefixo que a rede pública, procedimento ilustrado na Figura \ref{fig:arvore_binaria}. A partir daí, o algoritmo obtém uma lista com todas as sub-redes formadas pelas folhas dessa árvore, e gera as regras de {\tt netmap} conforme definido no template da Figura \ref{fig:netmap_cli}, incrementando o número de portas em um valor fixo de 2.000. 
     
     \begin{figure}[!htb]
         \centering
@@ -246,11 +239,10 @@
     
     A ferramenta desenvolvida foi nomeada como {\tt py-cgnat}. O código-fonte está disponível no GitHub\footnote{\url{https://github.com/williamabreu/py-cgnat}.} do autor e o executável pode ser baixado através do repositório oficial do Python\footnote{\url{https://pypi.org/project/pycgnat/}.}. O software foi desenvolvido seguindo as convenções do ecossistema Python e é {\tt open-source}, sendo lançado sob licença permissiva MIT para garantir liberdade de uso e de distribuição sem complicações. A versão 1.0b1 é a utilizada neste trabalho.
     
-    A seguir será utilizado o CON-PER-01 do Quadro \ref{tab:planilha_cgnat} para exemplificar o uso do programa {\tt py-cgnat} via terminal de comando. 
     
 \subsection{Utilização do utilitário py-cgnat}
     
-    Para fazer a geração das regras de {\tt netmap} para RouterOS, o comando a ser executado no terminal segue conforme mostrado na Figura \ref{fig:pycgnat_gen}, sendo passados os parâmetros informando a rede privada e a pública, a opção {\tt gen} para acionar o módulo de geração e a plataforma onde será configurado o CGNAT, que neste caso é o RouterOS. O último parâmetro é opcional e é o nome do arquivo de destino das regras caso queira ser salvo, pois se deixado em branco, as regras serão impressas no próprio terminal de comando. O campo plataforma foi posto por questão de extensibilidade, para deixar o software pronto para futuras novas versões, em que se pretende suportar equipamentos de outros fabricantes.
+    A seguir, será utilizado o mapeamento do concentrador CON-PER-01 (conforme Quadro \ref{tab:planilha_cgnat}) para exemplificar o uso do programa {\tt py-cgnat} via terminal de comando. Para fazer a geração das regras de {\tt netmap} para RouterOS, o comando a ser executado no terminal segue conforme mostrado na Figura \ref{fig:pycgnat_gen}. Devem ser informados os seguintes parâmetros: a rede privada e a pública, a opção {\tt gen} para acionar o módulo de geração e a plataforma onde será configurado o CGNAT, que neste caso é o RouterOS. O último parâmetro é opcional e é o nome do arquivo de destino das regras caso queira ser salvo, pois se deixado em branco, as regras serão impressas no próprio terminal de comando. O campo plataforma foi posto por questão de extensibilidade, para deixar o software pronto para futuras novas versões, em que se pretende suportar equipamentos de outros fabricantes.
     
     \begin{figure}[!htb]
         \centering
@@ -267,9 +259,7 @@
     
     O programa também calcula as traduções entre IP público-privado através do módulo {\tt trans}. Um exemplo é uma consulta para o IP privado 100.64.0.47, que retorna o IP público 203.0.113.15 e a faixa de portas definida entre 3536 e 5535 com o comando da Figura \ref{fig:pycgnat_transd}. De maneira reversa, uma consulta para o endereço 203.0.113.15 na porta 5000 retorna o cliente com IP 100.64.0.47, que pode ser verificada conforme Figura \ref{fig:pycgnat_transr}. As consultas de traduções independem de plataforma, pois fazem parte da lógica da metologia de mapeamento de portas utilizada. 
     
-    Além disso, o software foi desenvolvido para também ser utilizado como biblioteca de programação, com o objetivo de automatizar processos utilizando Python ou de integrar com sistemas já existentes, caso haja necessidade. Uma breve documentação (em inglês) do uso pode ser obtida no Apêndice A ou no repositório do GitHub ou do PyPI do {\tt py-cgnat}, já referenciados nas notas de rodapé.
-    
-    \begin{figure}[!htb]
+        \begin{figure}[!htb]
         \centering
         \caption{Exemplo de uso do programa py-cgnat para traduções de IP privado para público.} 
         \label{fig:pycgnat_transd}
@@ -282,7 +272,7 @@
         {\small Fonte: do autor (2020).} 
     \end{figure}
     
-    \begin{figure}[!htb]
+     \begin{figure}[!htb]
         \centering
         \caption{Exemplo de uso do programa py-cgnat para tradução de IP público para privado.} 
         \label{fig:pycgnat_transr}
@@ -294,14 +284,16 @@
 
         {\small Fonte: do autor (2020).} 
     \end{figure}
-
+    
+    Além disso, o software foi desenvolvido para também ser utilizado como biblioteca de programação, com o objetivo de automatizar processos utilizando Python ou de integrar com sistemas já existentes, caso haja necessidade. Uma breve documentação (em inglês) do uso pode ser obtida no Apêndice A ou nos repositórios do {\tt py-cgnat} no GitHub ou no PyPI.
+ 
 \section{Considerações sobre o uso de CGNAT}
     
-    Uma ressalva para o processo de consulta das traduções de endereços é que, caso seja necessário descobrir qual cliente estava navegando com determinado IP em um determinado instante, é necessário consultar no banco do RADIUS qual o \textit{login} PPPoE esteve com aquele IP no dito momento. Esse tipo de solicitação acontece geralmente por ordem judicial ao ISP, a fim de descobrir a identidade de criminosos, que atuam na internet ou através dela.
+    Uma ressalva para o processo de consulta das traduções de endereços é que, caso seja necessário descobrir qual cliente estava navegando com determinado IP em um determinado instante, é necessário consultar no banco do RADIUS qual o \textit{login} PPPoE esteve com aquele IP no dado momento. Esse tipo de solicitação acontece geralmente por ordem judicial ao ISP, a fim de descobrir a identidade de criminosos, que atuam na internet ou através dela.
     
-    É muito importante seguir a documentação exemplificada na planilha do Quadro \ref{tab:planilha_cgnat} para garantir o cumprimento do Marco Civil da Internet. Por isso, a utilização de faixas de endereços distintas para clientes com dívida, denominado \textit{pool} de bloqueio, é considerada uma má prática quando não aplicada a técnica de CGNAT em clientes com velocidade de navegação reduzida, porque no período de bloqueio por dívida, seria impossível fazer rastreamento por IP. Na Minasnet, antes da efetiva implantação do CGNAT na operadora, o sistema de informação da empresa adotava o \textit{pool} de bloqueio para clientes com velocidade reduzida por inadimplência. Depois da implantação deste trabalho, o sistema apenas altera a \textit{queue} do cliente devedor, mantendo o \textit{pool} de endereços dentro do CGNAT para garantir o rastreamento de todos os assinantes na internet.
+    É muito importante seguir a documentação exemplificada na planilha do Quadro \ref{tab:planilha_cgnat} para garantir o cumprimento do Marco Civil da Internet. Por isso, a utilização de faixas de endereços distintas para clientes com dívida, denominado \textit{pool} de bloqueio, é considerada uma má prática quando não aplicada a técnica de CGNAT em clientes com velocidade de navegação reduzida, porque no período de bloqueio por dívida, seria impossível fazer rastreamento por IP. 
 
 \subsection{Dificuldades encontradas na implantação}
     
-    A dificuldade encontrada no \textit{deploy} do CGNAT foi que somente dois concentradores não estavam com a tabela NAT do firewall funcionando, sendo que o motivo da falha era desconhecido pela equipe. A solução foi subir as regras no dispositivo do ABR, pois como eram poucos clientes, as regras da rede do CGNAT não impactou o desempenho do roteador de borda, sendo feito acompanhamento de consumo de CPU durante momentos de pico do dia (por volta de 20h) para constatar isso. Outra fonte de constatação foi a ausência de reclamações por clientes daquela área onde foi aplicada essa solução de contorno. Também é possível colocar roteadores MikroTik dedicados ao CGNAT intermediando concentrador e ABR, mas não foi adotada esta técnica como finalidade do trabalho.
+    A dificuldade encontrada no \textit{deploy} do CGNAT foi que dois concentradores não estavam com a tabela NAT do firewall funcionando, sendo que o motivo da falha era desconhecido pela equipe. A solução foi subir as regras no dispositivo do ABR, pois como eram poucos clientes, as regras da rede do CGNAT não impactou o desempenho do roteador de borda, sendo feito acompanhamento de consumo de CPU durante momentos de pico do dia (por volta de 20h) para constatar isso. Outra fonte de constatação foi a ausência de reclamações por clientes daquela área onde foi aplicada essa solução de contorno. Também é possível colocar roteadores MikroTik dedicados ao CGNAT intermediando concentrador e borda, mas não foi adotada esta técnica como finalidade do trabalho.
     
