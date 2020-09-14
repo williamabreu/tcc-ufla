@@ -11,7 +11,7 @@
     
     Uma forma de controlar o envio de spam, por parte dos provedores de serviço, é a utilização de listas negras com IPs que foram identificados como fonte de envio de \textit{spam}. Chamadas de \textit{Real-time Blackhole List} (RBL), doravante \textit{blacklist}, proporcionam a listagem de IPs detectados recentemente como participantes ativos de \textit{botnet} para envio de \textit{spam}, possibilitando ao provedor de serviço bloquear todo o tráfego de e-mail a partir daquele endereço IP listado. 
     
-    Neste trabalho, foi feito uso de RBL com a finalidade de monitoramento de IPs do AS que estão listados na blacklist, afim de identificar infecções no núcleo da rede (devido às vulnerabilidades associadas a equipamentos MikroTik com IP público), bem como nos assinantes. Para isso, foi utilizado o Composite Blocking List (CBL)\footnote{CBL \url{https://www.abuseat.org} é uma divisão da Spamhaus.}, uma RBL com consula no padrão DNS Blacklist (DNSBL).
+    Neste trabalho, foi feito uso de RBL com a finalidade de monitoramento de IPs do AS que estão listados na blacklist, afim de identificar infecções no núcleo da rede (devido às vulnerabilidades associadas a equipamentos MikroTik com IP público), bem como nos assinantes. Para isso, foi utilizado o \textit{Composite Blocking List} (CBL)\footnote{CBL \url{https://www.abuseat.org} é uma divisão da Spamhaus.}, uma RBL com consulta no padrão DNS Blacklist (DNSBL).
     
     DNSBL é especificado pela RFC 5782, funcionando com estrutura semelhante a um DNS reverso. Cada IP listado em uma DNSBL tem um subdomínio correspondente, sendo que cada entrada de subdomínio é criada revertendo os octetos do IP e concatenando com o domínio da DNSBL. Uma consulta à DNSBL retorna no registro {\tt A} o endereço 127.0.0.2 e no registro {\tt TXT} a descrição do motivo pelo qual o IP está listado na \textit{blacklist} \cite{rfc5782}. Quando o IP não está na \textit{blacklist}, a consulta retorna o erro {\tt NXDOMAIN}. Por exemplo, uma consulta para verificar se o IP 192.0.2.99 está listado na CBL seria feita a partir da entrada 99.2.0.192.cbl.abuseat.org e, em caso de listagem positiva, o link informado no registro {\tt TXT} daria um relatório detalhado da origem e qual tipo de infecção foi detectada atrás desse IP. Em terminal de comando Linux, a consulta pode ser feita da seguinte forma, para os registros {\tt A} e {\tt TXT}, respectivamente, conforme Figura \ref{fig:dnsbl_query}.
     
@@ -191,7 +191,7 @@
     
     
     
-    Um dos primeiros requisitos citados para implementação firewall foi a necessidade de impedir a invasão aos equipamentos de clientes, permitindo o acesso somente às redes gerenciais da empresa (NOC e Help Desk). Assim, na Figura \ref{fig:drop_cpe},  é apresentada a regra que determina o bloqueio de todo acesso externo nas portas de gerência em todos os assinantes, exceto IP fixo, a fim de garantir o cumprimento do requisito de segurança.
+    Um dos primeiros requisitos citados para implementação do firewall foi a necessidade de impedir a invasão aos equipamentos de clientes, permitindo o acesso somente às redes gerenciais da empresa (NOC e Help Desk). O acesso remoto a esses dispositivos é feito através de página web (na maioria dos casos), como também via SSH, Telnet ou Winbox. Assim, na Figura \ref{fig:drop_cpe}, é apresentada a regra que determina o bloqueio de todo acesso externo nas portas de gerência em todos os assinantes, exceto IP fixo, a fim de garantir o cumprimento do requisito de segurança.
     
     \begin{figure}[!htb]
         \centering
@@ -256,7 +256,7 @@
     
 \subsection{Considerações sobre o firewall}
     
-    A criação de regras de firewall é uma tarefa simples quando se conhece os recursos da plataforma na qual está trabalhando, porém requer cautela, pois configuração errônea pode comprometer a navegação dos assinantes ou então afetar negativamente o processamento dos roteadores nos quais foram feitos a implantação das regras. Devido à familiaridade com iptables, o firewall do RouterOS é intuitivo para quem tem experiência com o sistem Linux.
+    A criação de regras de firewall é uma tarefa simples quando se conhece os recursos da plataforma na qual está trabalhando, porém requer cautela, pois configuração errônea pode comprometer a navegação dos assinantes ou então afetar negativamente o processamento dos roteadores nos quais foram feitos a implantação das regras. Devido à familiaridade com iptables, o firewall do RouterOS é intuitivo para quem tem experiência com o sistem Linux, entretanto é um recurso implantado em software. O fato de o firewall não possuir hardware dedicado para a tarefa, limita a capacidade de filtragem que pode ser aplicada através dele.
     
     Após colocar o firewall da Minasnet em produção, notificações recorrentes do CERT.br cessaram. No entanto, novas vulnerabilidades são elencadas frequentemente pelos \textit{scanners} do grupo. Esses eventos determinam a necessidade da contínua tarefa de criação, de melhoria e de aperfeiçoamento das regras do firewall dos concentradores para atender aos novos requisitos de segurança levantados.
     

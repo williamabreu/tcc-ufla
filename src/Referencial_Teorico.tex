@@ -3,11 +3,11 @@
 
     O modelo de referência de redes, o modelo OSI (\textit{Open System Interconnection}), foi desenvolvido no final dos anos 1970 pela Organização Internacional para Padronização (ISO) para definir a arquitetura das redes de computadores emergentes na época \cite{kurose2014}. A arquitetura da rede é definida em camadas, que têm por objetivo garantir a independência entre os serviços oferecidos por cada uma delas. Essa independência é denominada encapsulamento, sendo que cada uma das camadas só pode se comunicar com as respectivas camadas adjacentes. O modelo OSI é dividido em 7 camadas: camada física, camada de enlace, camada de rede, camada de transporte, camada de sessão, camada de apresentação e camada de aplicação. Cada uma das camadas também costumam ser chamadas por números, sendo que a camada física é a camada 1 e camada de aplicação é a camada 7. As outras camadas seguem a mesma ordem de numeração.
     
-    O HTTP (\textit{Hypertext Transfer Protocol}), que é o protocolo por trás da web, é implementado no topo da pilha, na camada 7. Graças ao encapsulamento da pilha de protocolos, é possível o desenvolvimento de aplicações web sem a necessidade de preocupação com o meio de comunicação pelo qual os dados serão enviados. De acordo com o encapsulamento, uma requisição HTTP sairá do navegador da web e será encaminhada ao sistema operacional (SO). O SO estabelece a comunicação fim-a-fim entre cliente e servidor por meio de sockets TCP (\textit{Transmission Control Protocol}), que estão na camada de transporte do modelo. A partir de então, a requisição feita pela aplicação chega à placa de rede do dispositivo e será transmitida, através da internet, até o seu destino. Para isso, na camada de rede (ou camada 3) estão os esforços para que a comunicação pela internet funcione, através do \textit{Internet Protocol} -- IP.
+    O HTTP (\textit{Hypertext Transfer Protocol}), que é o protocolo por trás da web, é implementado no topo da pilha, na camada 7. Graças ao encapsulamento da pilha de protocolos, é possível o desenvolvimento de aplicações web sem a necessidade de preocupação com o meio de comunicação pelo qual os dados serão enviados. De acordo com o encapsulamento, uma requisição HTTP sairá do navegador da web e será encaminhada ao sistema operacional (SO). O SO estabelece a comunicação fim-a-fim entre cliente e servidor por meio de sockets TCP, que estão na camada de transporte do modelo. A partir de então, a requisição feita pela aplicação chega à placa de rede do dispositivo e será transmitida, através da internet, até o seu destino. Para isso, na camada de rede (ou camada 3) estão os esforços para que a comunicação pela internet funcione, através do \textit{Internet Protocol} -- IP.
     
 \section{Endereçamento IP}
     
-    O IPv4 (IP versão 4) é um protocolo implementado na camada de rede, tendo como objetivo fazer o encaminhamento e o roteamento dos pacotes. Um endereço IP é um identificador único na internet e é ele que fornece identidade aos dispositivos na rede. Para que a unicidade seja garantida, é necessário um acordo centralizado para gestão dos endereços. A IANA (\textit{Internet Assigned Numbers Authority}) é o órgão internacional responsável pela administração dos endereços, obedecendo diretrizes estabelecidas na RFC (\textit{Request for Comments}) 2050 e delegando blocos de endereços para administração regional, divididos geograficamente nos cinco grupos apresentados na Figura \ref{fig:rir_map}. Na América do Sul, a IANA delega ao LACNIC (Registro de Endereços da Internet para a América Latina e o Caribe) a administração dos endereços, que por sua vez delega ao NIC.br (Núcleo de Informação e Coordenação do Ponto BR) para controle regional no Brasil, sendo este último o órgão recorrido pelos ISPs (\textit{Internet Service Provider}) nacionais para obtenção de blocos de endereços \cite{iana2020}.
+    O IPv4 (IP versão 4) é um protocolo implementado na camada de rede, tendo como objetivo fazer o encaminhamento e o roteamento dos pacotes. Um endereço IP é um identificador único na internet e é ele que fornece identidade aos dispositivos na rede. Para que a unicidade seja garantida, é necessário um acordo centralizado para gestão dos endereços. A IANA (\textit{Internet Assigned Numbers Authority}) é o órgão internacional responsável pela administração dos endereços, obedecendo diretrizes estabelecidas na RFC (\textit{Request for Comments}) 2050 e delegando blocos de endereços para administração regional, divididos geograficamente nos cinco grupos apresentados na Figura \ref{fig:rir_map}. Na América do Sul, a IANA delega ao LACNIC (Registro de Endereços da Internet para a América Latina e o Caribe) a administração dos endereços, que por sua vez delega ao NIC.br (Núcleo de Informação e Coordenação do Ponto BR) para controle regional no Brasil, sendo este último o órgão recorrido pelos ISPs nacionais para obtenção de blocos de endereços \cite{iana2020}.
     
     \begin{figure}[!htb]
         \centering
@@ -19,15 +19,15 @@
     
 %\subsection{Cálculos VLSM}
 
-    Um endereço IPv4 é um número de 32 bits, sendo representado na forma \textit{a.b.c.d/x}, em que \textit{x} é um número inteiro entre 0 e 32 que indica o tamanho do prefixo da rede, o qual representa a quantidade de bits da máscara da rede. Por exemplo, uma máscara 255.255.255.0 é representada por /24. Os $(32 - x)$ bits restantes são os bits dos \textit{hosts}. Essa representação é denominada CIDR (Classless Inter-Domain Routing), uma representação sem classes, adotada após o endereçamento com classes (A, B, C, D e E) cair em desuso devido ao desperdício na alocação de endereços.
+    Um endereço IPv4 é um número de 32 bits, sendo representado na forma \textit{a.b.c.d/x}, em que \textit{x} é um número inteiro entre 0 e 32 que indica o tamanho do prefixo da rede, o qual representa a quantidade de bits da máscara da rede. Por exemplo, uma máscara 255.255.255.0 é representada por /24. Os $(32 - x)$ bits restantes são os bits dos \textit{hosts}. Essa representação é denominada CIDR (\textit{Classless Inter-Domain Routing}), uma representação sem classes, adotada após o endereçamento com classes (A, B, C, D e E) cair em desuso devido ao desperdício na alocação de endereços.
     
-    Cálculos de VLSM (Variable Length Subnet Masking) operam sobre o CIDR e permitem a criação de sub-redes dentro de uma sub-rede (recursivamente). Por exemplo, um ISP tem uma rede /21 alocada pelo NIC.br e pode dividi-la em sua intranet em 8 sub-redes /24, ou em 4 sub-redes /23 ou até mesmo em 2 sub-redes /23 mais 4 sub-redes /24 de maneira mista.
+    Cálculos de VLSM operam sobre o CIDR e permitem a criação de sub-redes dentro de uma sub-rede (recursivamente). Por exemplo, um ISP tem uma rede /21 alocada pelo NIC.br e pode dividi-la em sua intranet em 8 sub-redes /24, ou em 4 sub-redes /23 ou até mesmo em 2 sub-redes /23 mais 4 sub-redes /24 de maneira mista.
 
 \subsection{Mitigando a escassez do IPv4 com CGNAT}
 
-    O número de dispositivos conectados à internet tem crescido de tal forma que ultrapassou a capacidade de atendimento de IPs que um ISP pode oferecer aos seus assinantes. Para contrornar isso, a estratégia adotada é, a princípio, oferecer um IP público na interface de saída do roteador de borda (WAN) da sub-rede do cliente e uma faixa de endereços privados na rede local (LAN) do mesmo, sendo feita a tradução de endereços na interface WAN/LAN. IPs privados são blocos definidos pela RFC 1918 e que não devem ser anunciados na internet, sendo restritos ao uso em intranets para o funcionamento do artifício do NAT (network address translation).
+    O número de dispositivos conectados à internet tem crescido de tal forma que ultrapassou a capacidade de atendimento de IPs que um ISP pode oferecer aos seus assinantes. Para contornar isso, a estratégia adotada é, a princípio, oferecer um IP público na interface de saída do roteador de borda (WAN) da sub-rede do cliente e uma faixa de endereços privados na rede local (LAN) do mesmo, sendo feita a tradução de endereços na interface WAN/LAN. IPs privados são blocos definidos pela RFC 1918 e que não devem ser anunciados na internet, sendo restritos ao uso em intranets para o funcionamento do artifício do NAT (\textit{Network Address Translation}).
     
-    Existem ISPs que não possuem endereços o suficiente para todos os assinantes, sendo necessário recorrer ao recurso do CGNAT (Carrier-grade NAT) para contornar o problema. O CGNAT implementa uma camada de NAT na WAN do cliente, deixando de entregar um IP público para alocar um IP privado ao gateway cliente. IPs privados de CGNAT são definidos pela RFC 6598 e é através deles que é implantado o NAT da operadora, em que um mesmo endereço público é compartilhado por vários assinantes.
+    Existem ISPs que não possuem endereços o suficiente para todos os assinantes, sendo necessário recorrer ao recurso do CGNAT (\textit{Carrier-grade} NAT) para contornar o problema. O CGNAT implementa uma camada de NAT na WAN do cliente, deixando de entregar um IP público para alocar um IP privado ao gateway cliente. IPs privados de CGNAT são definidos pela RFC 6598 e é através deles que é implantado o NAT da operadora, em que um mesmo endereço público é compartilhado por vários assinantes.
 
 % \subsection{Motivação para o uso de NAT}
    
@@ -56,7 +56,7 @@
         {\small Fonte: do autor (2020).} 
     \end{figure}
     
-    No modelo vertical, o sentido de crescimento dos IPs privados não coincide com os IPs públicos, pois o sentido desta vez segue o crescimento do range de portas. Assim, é tomado um IP público como referência e são mapeadas as faixas de portas para os IPs privados consecutivamente, como pode ser visto na Figura \ref{fig:cgnat_vertical}. Essa técnica é de mais fácil entendimento, porém requer mais trabalho para implantação por demandar criação de várias regras individuais de NAT.
+    No modelo vertical, o sentido de crescimento dos IPs privados não coincide com os IPs públicos, pois o sentido desta vez segue o crescimento do \textit{range} de portas. Assim, é tomado um IP público como referência e são mapeadas as faixas de portas para os IPs privados consecutivamente, como pode ser visto na Figura \ref{fig:cgnat_vertical}. Essa técnica é de mais fácil entendimento, porém requer mais trabalho para implantação por demandar criação de várias regras individuais de NAT.
     
     \begin{figure}[!htb]
         \centering
@@ -75,10 +75,14 @@
     Do ponto de vista do modelo OSI, o NAT viola o encapsulamento da pilha de protocolos por trabalhar em conjunto nas camadas de rede e de transporte, com a tradução entre IP e porta, sem hierarquia. 
     
 \subsection{Migração para IPv6}
+    % Poderia ser melhor trabalhado. Indicando de forma mais direta onde estao os problemas, ou seja, Quem é que não implementou o IPv6 ainda?
+    % E quanto às opções de transição? Pilha dupla por exemplo?
     
     Como solução aos problemas estruturais e operacionais do NAT, foi proposta a migração para o IPv6 (IP versão 6), que adota como endereço um número de 128 bits, muito mais do que o suficiente para endereçar unicamente todos os dispositivos em LAN sem o uso de IPs privados. Como todos os dispositivos podem ter um IP público através do IPv6, não é necessário o conceito de NAT com o novo protocolo.
     
-    Embora o IPv6 seja a solução, não basta apenas o ISP implantá-lo, é necessário que o acordo de tráfego no novo protocolo também esteja fechado com os servidores de sistemas e de provedores de conteúdo. Enquanto isso não for um tecnologia de ponta-a-ponta, o CGNAT é um modelo satisfatório no processo de transição.
+    Embora o IPv6 seja a solução, não basta apenas o ISP implantá-lo, é necessário que o acordo de tráfego no novo protocolo também esteja fechado com os servidores de sistemas e de provedores de conteúdo. Enquanto isso não for um tecnologia de ponta-a-ponta, o CGNAT é um modelo satisfatório no processo de transição. Por exemplo, muitos sistemas governamentais ainda utilizam somente IPv4. Dessa forma, os provedores devem manter a conectividade através do protocolo antigo para que não haja prejuízo aos clientes. 
+    
+    Além do mais, o trabalho dos ISPs de pequeno e médio porte demanda  atenção em vários problemas operacioanis que a tarefa de implantação do IPv6 acaba perdendo prioridade. Ultimamente, todos os roteadores de \textit{core} já são todos compatíveis com IPv6 nativamente, sendo o impecílio para implantação final do protocolo uma questão de gestão de prioridades.
 
 \section{Segurança de ambientes de rede}
 
@@ -112,15 +116,15 @@
     
     Dependendo da dimensão da rede, é possível adotar modelos simplificados para economia de recursos, fazendo a mescla das funções de um ou de mais equipamentos em um único, desde que o equipamento suporte essa configuração.
     
-    A Figura \ref{fig:isp} é uma representação genérica de camada 3 do núcleo da rede de um ISP. Existem muitos outros elementos de conexão de camada 2 e de camada 1 (lógica e física respectivamente) entre os dispositivos que não estão na imagem, como enlaces de rádio ou de fibra óptica. Também foi omitido, por simplificação, que dentro do salto entre o ABR e a Internet na Figura \ref{fig:isp}, existe o ASBR (Autonomous System Border Router), que é resposável por rotear o tráfego para a internet.
+    A Figura \ref{fig:isp} é uma representação genérica de camada 3 do núcleo da rede de um ISP. Existem muitos outros elementos de conexão de camada 2 e de camada 1 (lógica e física respectivamente) entre os dispositivos que não estão na imagem, como enlaces de rádio ou de fibra óptica. Também foi omitido, por simplificação, que dentro do salto entre o ABR e a Internet na Figura \ref{fig:isp}, existe o ASBR (\textit{Autonomous System Border Router}), que é resposável por rotear o tráfego para a internet.
     
     \begin{figure}[!htb]
         \centering
         \caption{Modelo de topologia de um ISP.} 
         \label{fig:isp} 
-        \includegraphics[width=0.9\linewidth]{img/isp.png} \\
+        \includegraphics[width=1.0\linewidth]{img/isp.png} \\
         {\small Fonte: do autor (2020).} 
     \end{figure}
     
-    Na infraestrutura lógica do ISP, também entram os servidores de serviços locais, que provêm servidores de autenticação RADIUS, serviço de DNS local para respostas mais rápidas, Proxy HTTP\footnote{Também conhecido como CDN -- content distribution network.} para poupar consumo de banda de acesso à internet e serviço de VPN.
+    Na infraestrutura lógica do ISP, também entram os servidores de serviços locais, que provêm servidores de autenticação RADIUS, serviço de DNS local para respostas mais rápidas, Proxy HTTP\footnote{Também conhecido como CDN -- \textit{Content Distribution Network}.} para poupar consumo de banda de acesso à internet e serviço de VPN.
     

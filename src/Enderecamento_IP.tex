@@ -17,7 +17,7 @@
    
 \section{Metodologia para implementação de CGNAT}
 
-   Observando os requisitos definidos pelo Art. 13 da Lei nº 12.965/2014, descritos na Seção \ref{sec:marco_civil}, e relacionando-os com a infraestrutura de um concentrador, devemos registrar o \textit{timestamp} de início e de fim da sessão PPPoE do cliente bem como qual o IP foi disponibilizado a ele durante essa sessão. Salvar essas informações é simples quando se utiliza um servidor RADIUS\footnote{A Minasnet utiliza o FreeRADIUS \url{https://freeradius.org}.}, pois a função básica desse serviço é autorizar a conexão de assinantes, atribuindo IP e armazenando o \textit{log} das informações de acesso.
+   Observando os requisitos definidos pelo Art. 13 da Lei nº 12.965/2014, descritos na Seção \ref{sec:marco_civil}, e relacionando-os com a infraestrutura de um concentrador, devemos registrar o \textit{timestamp} de início e de fim da sessão PPPoE do cliente bem como qual o IP foi disponibilizado a ele durante essa sessão. A sessão PPPoE inicia-se no instante em que o cliente estabelece conexão e se encerra quando acontece a desconexão. Salvar essas informações é simples quando se utiliza um servidor RADIUS\footnote{A Minasnet utiliza o FreeRADIUS \url{https://freeradius.org}.}, pois a função básica desse serviço é autorizar a conexão de assinantes, atribuindo IP e armazenando o \textit{log} das informações de acesso. 
 
    A RFC 6888 estabelece requisitos para implementação do CGNAT de maneira segura. Um ponto importante dessa RFC é a definição obrigatória do mapeamento direto entre os \textit{pools} de endereços públicos e privado, imprescindível para que o CGNAT seja determinístico. Outro ponto importante é a manutenção de registro das informações do assinante conectado, assim como especificado pelo Marco Civil da Internet.
    
@@ -50,7 +50,7 @@
        \item anotações.
    \end{enumerate}
    
-   Os dois primeiros itens são apenas por questão de organização, pois existem dezenas de concentradores no ISP e todos estão documentados nessa planilha, sendo somente as informações de mapeamento de redes interna e externa e o \textit{timestamp} relevantes para eficácia do registro. As anotações tem informações sobre desativação da regra de CGNAT ou modificações nas redes, não sendo criado mais campos específicos porque o objetivo é que seja alterado o mínimo possível. Até hoje, poucas vezes houveram alterações no mapeamento das sub-redes. O Quadro \ref{tab:planilha_cgnat} exemplifica o uso da planilha para controle e documentação dos mapeamentos.
+   Os dois primeiros itens são apenas por questão de organização, pois existem dezenas de concentradores no ISP e todos estão documentados nessa planilha, sendo somente as informações de mapeamento de redes interna e externa e o \textit{timestamp} relevantes para eficácia do registro. As anotações tem informações sobre desativação da regra de CGNAT ou modificações nas redes, não sendo criado mais campos específicos porque o objetivo é que seja alterado o mínimo possível. Até hoje, poucas vezes houve alterações no mapeamento das sub-redes. O Quadro \ref{tab:planilha_cgnat} exemplifica o uso da planilha para controle e documentação dos mapeamentos.
 
    \begin{quadro}[htb]
         \begin{center}
@@ -126,7 +126,7 @@
     
     %\footnote{Python \url{https://www.python.org/} é uma linguagem de programação interpretada e multiplataforma.}.
     
-    O primeiro passo para o desenvolvimento prático do CGNAT é entender o que o RouterOS nos proporciona para atingir esse objetivo. Por ser baseado em Linux, a ideia básica é construir as regras de NAT através do módulo de firewall do sistema, pois o NAT é interpretado como uma regra de firewall por fazer modificação no cabeçalho do dos pacotes de dados ao alterar os valores de endereço e de porta originais.
+    O primeiro passo para o desenvolvimento prático do CGNAT é entender o que o RouterOS nos proporciona para atingir esse objetivo. Por ser baseado em Linux, a ideia básica é construir as regras de NAT através do módulo de firewall do sistema, pois o NAT é interpretado como uma regra de firewall por fazer modificação no cabeçalho dos pacotes de dados ao alterar os valores de endereço e de porta originais.
 
     O módulo utilizado é a tabela NAT do firewall do RouterOS, sendo necessário configurar os seguintes parâmetros na geração das regras conforme definidos na documentação \cite{natmikrotik}:
 
@@ -237,7 +237,7 @@
         {\small Fonte: do autor (2020).} 
     \end{figure}
     
-    A ferramenta desenvolvida foi nomeada como {\tt py-cgnat}. O código-fonte está disponível no GitHub\footnote{\url{https://github.com/williamabreu/py-cgnat}.} do autor e o executável pode ser baixado através do repositório oficial do Python\footnote{\url{https://pypi.org/project/pycgnat/}.}. O software foi desenvolvido seguindo as convenções do ecossistema Python e é {\tt open-source}, sendo lançado sob licença permissiva MIT para garantir liberdade de uso e de distribuição sem complicações. A versão 1.0b1 é a utilizada neste trabalho.
+    A ferramenta desenvolvida foi nomeada como {\tt py-cgnat}. O código-fonte está disponível no GitHub\footnote{\url{https://github.com/williamabreu/py-cgnat}.} do autor e o executável pode ser baixado através do repositório oficial do Python\footnote{\url{https://pypi.org/project/pycgnat/}.}. O software foi desenvolvido seguindo as convenções do ecossistema Python e é \textit{open--source}, sendo lançado sob licença permissiva MIT para garantir liberdade de uso e de distribuição sem complicações. A versão 1.0b1 é a utilizada neste trabalho.
     
     
 \subsection{Utilização do utilitário py-cgnat}

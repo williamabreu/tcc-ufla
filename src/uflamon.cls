@@ -658,7 +658,7 @@
     {\geraFolhaAprovacao} %
     %se existir arquivo, então insira-o
     {%\pagestyle{empty} %
-     \vspace*{-4.5cm}\hspace*{-4.5cm} \includegraphics[scale=\@escalaFolhaAprovacao]{\@arquivoFolhaAprovacao}%
+     \vspace*{-3.2cm}\hspace*{-4.3cm} \includegraphics[scale=\@escalaFolhaAprovacao]{\@arquivoFolhaAprovacao}%
      \cleardoublepage} %
 }
 
